@@ -112,8 +112,6 @@ The primary feature requirements for this group includes:
       categories
 
 2.  Associating spending accounts/credit lines/investment assets:
-    - A User should be able to differentiate between reoccurring
-      expenses/budget categories & longer-term savings goals
     - A User should be able to add new bank accounts, lines of credit, &
       investment accounts/assets
     - A User should be able to remove bank accounts/credit
@@ -135,6 +133,8 @@ The primary feature requirements for this group includes:
       credit
 
 4.  Budgeting plans & savings goals:
+    - A User should be able to differentiate between reoccurring
+      expenses/budget categories & longer-term savings goals
     - A User should be able to make ad-hoc adjustments to budget
       categories to stay on track without drastic changes to their
       entire budgeting plan
@@ -149,6 +149,12 @@ The primary feature requirements for this group includes:
     - A User should be able to see at a glance if they are on track to
       meet the required amount for a budget category by its next
       scheduled date
+    - A User should have allocated amounts for each category & savings
+      goal updated automatically whenever a transaction including new
+      income is added to an associated bank account
+    - A User should be able to exclude balances & income in designated
+      accounts from being used when automatically allocating for
+      reocurring expenses
 
 5.  Shared budgeting plans:
     - A User should be able to join or invite another User to a shared
