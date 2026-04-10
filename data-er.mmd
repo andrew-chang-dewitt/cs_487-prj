@@ -1,0 +1,49 @@
+erDiagram
+    user {
+        uuid id PK "NOT NULL"
+        text display_name "NOT NULL"
+        bool login "DEFAULT TRUE"
+        text username
+        text password
+        text nickname
+    }
+    account {
+        uuid id PK "NOT NULL"
+        uuid user_id FK "NOT NULL"
+        text name
+    }
+    transaction {
+        uuid id PK "NOT NULL"
+        uuid account_id FK "NOT NULL"
+        uuid spent_from FK
+        numeric amount "NOT NULL"
+        text description
+        text payee "NOT NULL"
+        timestamp timestamp "NOT NULL"
+    }
+    category {
+        uuid id PK "NOT NULL"
+        uuid user_id FK "NOT NULL"
+        uuid next_occurance_goal FK "NOT NULL"
+        uuid reoccurance_schedule_id FK "NOT NULL"
+        text name "NOT NULL"
+        smallint priority "NOT NULL DEFAULT 0"
+    }
+    shared_user {
+        uuid single_user_id FK "NOT NULL"
+        uuid shared_user_id FK "NOT NULL"
+    }
+    schedule {
+        uuid id PK "NOT NULL"
+        text name "NOT NULL"
+        smallint[] arguments
+    }
+
+    user ||--o{ account : "has"
+    user ||--o{ category : "has"
+    user ||--o{ shared_user : "single_user"
+    user ||--o{ shared_user : "shared_user"
+    account ||--o{ transaction : "has"
+    transaction }o--o| category : "spent_from"
+    category ||--|| category : "next_occurance_goal"
+    category }|--|| schedule : "reoccurance_schedule"
