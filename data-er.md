@@ -2,16 +2,15 @@
 erDiagram
     user {
         uuid id PK "NOT NULL"
-        text display_name "NOT NULL"
         bool login "DEFAULT TRUE"
-        text username
-        text password
-        text nickname
+        text username "NOT NULL"
+        text password "NOT NULL"
+        text display_name
     }
     account {
         uuid id PK "NOT NULL"
         uuid user_id FK "NOT NULL"
-        text name
+        text name "NOT NULL"
     }
     transaction {
         uuid id PK "NOT NULL"
@@ -25,8 +24,8 @@ erDiagram
     category {
         uuid id PK "NOT NULL"
         uuid user_id FK "NOT NULL"
-        uuid next_occurance_goal FK "NOT NULL"
-        uuid reoccurance_schedule_id FK "NOT NULL"
+        uuid next_occurance_id FK
+        uuid reoccurance_schedule_id FK
         text name "NOT NULL"
         smallint priority "NOT NULL DEFAULT 0"
     }
