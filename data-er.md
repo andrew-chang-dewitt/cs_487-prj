@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     user {
         uuid id PK "NOT NULL"
@@ -47,3 +48,4 @@ erDiagram
     transaction }o--o| category : "spent_from"
     category ||--|| category : "next_occurance_goal"
     category }|--|| schedule : "reoccurance_schedule"
+```
