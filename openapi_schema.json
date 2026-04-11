@@ -773,8 +773,8 @@
                 "tags": [
                     "Transaction"
                 ],
-                "summary": "Mark Transaction as \"spent from\" the given Envelope",
-                "description": "Mark Transaction as Spent From given Envelope.",
+                "summary": "Mark Transaction as \"spent from\" the given Category",
+                "description": "Mark Transaction as Spent From given Category.",
                 "operationId": "put_spent_from_transaction__transaction_id__spent_from__spent_from_id__put",
                 "parameters": [
                     {
@@ -901,22 +901,22 @@
                 ]
             }
         },
-        "/balance/envelope/{envelope_id}": {
+        "/balance/category/{category_id}": {
             "get": {
                 "tags": [
                     "Balance"
                 ],
-                "summary": "Get the balance of a given Envelope.",
-                "operationId": "get_envelope_balance_envelope__envelope_id__get",
+                "summary": "Get the balance of a given Category.",
+                "operationId": "get_category_balance_category__category_id__get",
                 "parameters": [
                     {
                         "required": true,
                         "schema": {
-                            "title": "Envelope Id",
+                            "title": "Category Id",
                             "type": "string",
                             "format": "uuid"
                         },
-                        "name": "envelope_id",
+                        "name": "category_id",
                         "in": "path"
                     }
                 ],
@@ -975,23 +975,23 @@
                 ]
             }
         },
-        "/envelope": {
+        "/category": {
             "get": {
                 "tags": [
-                    "Envelope"
+                    "Category"
                 ],
-                "summary": "Get all Envelopes for current user.",
-                "operationId": "get_root_envelope_get",
+                "summary": "Get all Categories for current user.",
+                "operationId": "get_root_category_get",
                 "responses": {
                     "200": {
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "Response Get Root Envelope Get",
+                                    "title": "Response Get Root Category Get",
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/EnvelopeOut"
+                                        "$ref": "#/components/schemas/CategoryOut"
                                     }
                                 }
                             }
@@ -1006,15 +1006,15 @@
             },
             "post": {
                 "tags": [
-                    "Envelope"
+                    "Category"
                 ],
-                "summary": "Create new Envelope.",
-                "operationId": "post_root_envelope_post",
+                "summary": "Create new Category.",
+                "operationId": "post_root_category_post",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/EnvelopeIn"
+                                "$ref": "#/components/schemas/CategoryIn"
                             }
                         }
                     },
@@ -1026,7 +1026,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EnvelopeOut"
+                                    "$ref": "#/components/schemas/CategoryOut"
                                 }
                             }
                         }
@@ -1049,22 +1049,22 @@
                 ]
             }
         },
-        "/envelope/{envelope_id}": {
+        "/category/{category_id}": {
             "get": {
                 "tags": [
-                    "Envelope"
+                    "Category"
                 ],
-                "summary": "Get requested Envelope for current user.",
-                "operationId": "get_id_envelope__envelope_id__get",
+                "summary": "Get requested Category for current user.",
+                "operationId": "get_id_category__category_id__get",
                 "parameters": [
                     {
                         "required": true,
                         "schema": {
-                            "title": "Envelope Id",
+                            "title": "Category Id",
                             "type": "string",
                             "format": "uuid"
                         },
-                        "name": "envelope_id",
+                        "name": "category_id",
                         "in": "path"
                     }
                 ],
@@ -1074,7 +1074,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EnvelopeOut"
+                                    "$ref": "#/components/schemas/CategoryOut"
                                 }
                             }
                         }
@@ -1098,19 +1098,19 @@
             },
             "put": {
                 "tags": [
-                    "Envelope"
+                    "Category"
                 ],
-                "summary": "Update the given Envelope.",
-                "operationId": "put_id_envelope__envelope_id__put",
+                "summary": "Update the given Category.",
+                "operationId": "put_id_category__category_id__put",
                 "parameters": [
                     {
                         "required": true,
                         "schema": {
-                            "title": "Envelope Id",
+                            "title": "Category Id",
                             "type": "string",
                             "format": "uuid"
                         },
-                        "name": "envelope_id",
+                        "name": "category_id",
                         "in": "path"
                     }
                 ],
@@ -1118,7 +1118,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/EnvelopeChanges"
+                                "$ref": "#/components/schemas/CategoryChanges"
                             }
                         }
                     },
@@ -1130,7 +1130,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EnvelopeOut"
+                                    "$ref": "#/components/schemas/CategoryOut"
                                 }
                             }
                         }
@@ -1153,23 +1153,23 @@
                 ]
             }
         },
-        "/envelope/{envelope_id}/funds/{funds}": {
+        "/category/{category_id}/funds/{funds}": {
             "put": {
                 "tags": [
-                    "Envelope"
+                    "Category"
                 ],
-                "summary": "Add given funds to Envelope.",
-                "description": "Add funds to (or remove funds from, if given as a negative) envelope.\n\nOptionally, include source/target envelope for funds to be taken\nfrom/sent to. Defaults to Available Balance if not given.",
-                "operationId": "put_funds_envelope__envelope_id__funds__funds__put",
+                "summary": "Add given funds to Category.",
+                "description": "Add funds to (or remove funds from, if given as a negative) category.\n\nOptionally, include source/target category for funds to be taken\nfrom/sent to. Defaults to Available Balance if not given.",
+                "operationId": "put_funds_category__category_id__funds__funds__put",
                 "parameters": [
                     {
                         "required": true,
                         "schema": {
-                            "title": "Envelope Id",
+                            "title": "Category Id",
                             "type": "string",
                             "format": "uuid"
                         },
-                        "name": "envelope_id",
+                        "name": "category_id",
                         "in": "path"
                     },
                     {
@@ -1200,7 +1200,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EnvelopeOut"
+                                    "$ref": "#/components/schemas/CategoryOut"
                                 }
                             }
                         }
@@ -1321,7 +1321,7 @@
                             },
                             {
                                 "enum": [
-                                    "envelope"
+                                    "category"
                                 ],
                                 "type": "string"
                             }
@@ -1372,8 +1372,8 @@
                     }
                 }
             },
-            "EnvelopeChanges": {
-                "title": "EnvelopeChanges",
+            "CategoryChanges": {
+                "title": "CategoryChanges",
                 "type": "object",
                 "properties": {
                     "name": {
@@ -1382,10 +1382,10 @@
                     }
                 },
                 "additionalProperties": false,
-                "description": "Fields used when updating an Envelope, all are optional."
+                "description": "Fields used when updating an Category, all are optional."
             },
-            "EnvelopeIn": {
-                "title": "EnvelopeIn",
+            "CategoryIn": {
+                "title": "CategoryIn",
                 "required": [
                     "name"
                 ],
@@ -1397,10 +1397,10 @@
                     }
                 },
                 "additionalProperties": false,
-                "description": "Fields needed from user to create an Envelope."
+                "description": "Fields needed from user to create an Category."
             },
-            "EnvelopeOut": {
-                "title": "EnvelopeOut",
+            "CategoryOut": {
+                "title": "CategoryOut",
                 "required": [
                     "id",
                     "name",
@@ -1429,7 +1429,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "description": "Fields returned by Envelope queries."
+                "description": "Fields returned by Category queries."
             },
             "HTTPValidationError": {
                 "title": "HTTPValidationError",
