@@ -1276,12 +1276,12 @@
                         "in": "path"
                     },
                     {
-                        "description": "Where take funds from; default: Available Balance.",
+                        "description": "Where to take funds from; default: Available Balance.",
                         "required": false,
                         "schema": {
                             "title": "Other",
                             "type": "string",
-                            "description": "Where take funds from; default: Available Balance.",
+                            "description": "Where to take funds from; default: Available Balance.",
                             "format": "uuid"
                         },
                         "name": "other",
