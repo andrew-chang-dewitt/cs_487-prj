@@ -1372,235 +1372,6 @@
                 ]
             }
         },
-        "/schedule": {
-            "get": {
-                "tags": [
-                    "Schedule"
-                ],
-                "summary": "Get all Schedules for current user.",
-                "description": "Read all budget schedules for the current User.",
-                "operationId": "get_root_schedule_get",
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "title": "Response Get Root Schedule Get",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ScheduleOut"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Schedule"
-                ],
-                "summary": "Create a new Schedule.",
-                "description": "Associate a recurring schedule with a budget Category.",
-                "operationId": "post_root_schedule_post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScheduleIn"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScheduleOut"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            }
-        },
-        "/schedule/{schedule_id}": {
-            "get": {
-                "tags": [
-                    "Schedule"
-                ],
-                "summary": "Get the requested Schedule.",
-                "description": "Read the given Schedule for the current User.",
-                "operationId": "get_id_schedule__schedule_id__get",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "title": "Schedule Id",
-                            "type": "string",
-                            "format": "uuid"
-                        },
-                        "name": "schedule_id",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScheduleOut"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "Schedule"
-                ],
-                "summary": "Update the given Schedule.",
-                "description": "Update the given Schedule with the given changes.",
-                "operationId": "put_id_schedule__schedule_id__put",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "title": "Schedule Id",
-                            "type": "string",
-                            "format": "uuid"
-                        },
-                        "name": "schedule_id",
-                        "in": "path"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScheduleChanges"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScheduleOut"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Schedule"
-                ],
-                "summary": "Delete the given Schedule.",
-                "description": "Permanently remove the given Schedule.",
-                "operationId": "delete_id_schedule__schedule_id__delete",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "title": "Schedule Id",
-                            "type": "string",
-                            "format": "uuid"
-                        },
-                        "name": "schedule_id",
-                        "in": "path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScheduleOut"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            }
-        },
         "/shared_user": {
             "get": {
                 "tags": [
@@ -1704,6 +1475,112 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SharedUserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/category/{category_id}/schedule": {
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Set or update the Schedule for the given Category.",
+                "description": "Create or replace the recurring schedule associated with the given Category.",
+                "operationId": "put_schedule_category__category_id__schedule_put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Remove the Schedule from the given Category.",
+                "description": "Delete the recurring schedule associated with the given Category.",
+                "operationId": "delete_schedule_category__category_id__schedule_delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
                                 }
                             }
                         }
@@ -1882,6 +1759,18 @@
                     "name": {
                         "title": "Name",
                         "type": "string"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "Updated schedule for this Category, or null to remove it.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ScheduleChanges"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 },
                 "additionalProperties": false,
@@ -1897,6 +1786,18 @@
                     "name": {
                         "title": "Name",
                         "type": "string"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "Optional recurring schedule to associate with this Category.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 },
                 "additionalProperties": false,
@@ -1929,6 +1830,18 @@
                     "total_funds": {
                         "title": "Total Funds",
                         "type": "number"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "The recurring schedule associated with this Category, if any.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Schedule"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 },
                 "additionalProperties": false,
@@ -2224,159 +2137,6 @@
                     }
                 }
             },
-            "ScheduleChanges": {
-                "title": "ScheduleChanges",
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "title": "Name",
-                        "type": "string"
-                    },
-                    "category_id": {
-                        "title": "Category Id",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "amount": {
-                        "title": "Amount",
-                        "type": "number"
-                    },
-                    "period": {
-                        "title": "Period",
-                        "type": "integer"
-                    },
-                    "period_unit": {
-                        "title": "Period Unit",
-                        "enum": [
-                            "days",
-                            "weeks",
-                            "months"
-                        ],
-                        "type": "string"
-                    },
-                    "start_date": {
-                        "title": "Start Date",
-                        "type": "string",
-                        "format": "date"
-                    }
-                },
-                "additionalProperties": false,
-                "description": "Fields used when updating a Schedule, all are optional."
-            },
-            "ScheduleIn": {
-                "title": "ScheduleIn",
-                "required": [
-                    "name",
-                    "category_id",
-                    "amount",
-                    "period",
-                    "period_unit",
-                    "start_date"
-                ],
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "title": "Name",
-                        "type": "string"
-                    },
-                    "category_id": {
-                        "title": "Category Id",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "amount": {
-                        "title": "Amount",
-                        "type": "number"
-                    },
-                    "period": {
-                        "title": "Period",
-                        "type": "integer",
-                        "description": "How many period_units between each recurrence."
-                    },
-                    "period_unit": {
-                        "title": "Period Unit",
-                        "enum": [
-                            "days",
-                            "weeks",
-                            "months"
-                        ],
-                        "type": "string"
-                    },
-                    "start_date": {
-                        "title": "Start Date",
-                        "type": "string",
-                        "format": "date"
-                    }
-                },
-                "additionalProperties": false,
-                "description": "Fields required to create a new Schedule."
-            },
-            "ScheduleOut": {
-                "title": "ScheduleOut",
-                "required": [
-                    "id",
-                    "user_id",
-                    "name",
-                    "category_id",
-                    "amount",
-                    "period",
-                    "period_unit",
-                    "start_date",
-                    "next_date"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "title": "Id",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "user_id": {
-                        "title": "User Id",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "name": {
-                        "title": "Name",
-                        "type": "string"
-                    },
-                    "category_id": {
-                        "title": "Category Id",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "amount": {
-                        "title": "Amount",
-                        "type": "number"
-                    },
-                    "period": {
-                        "title": "Period",
-                        "type": "integer",
-                        "description": "How many period_units between each recurrence."
-                    },
-                    "period_unit": {
-                        "title": "Period Unit",
-                        "enum": [
-                            "days",
-                            "weeks",
-                            "months"
-                        ],
-                        "type": "string"
-                    },
-                    "start_date": {
-                        "title": "Start Date",
-                        "type": "string",
-                        "format": "date"
-                    },
-                    "next_date": {
-                        "title": "Next Date",
-                        "type": "string",
-                        "format": "date"
-                    }
-                },
-                "additionalProperties": false,
-                "description": "Fields returned by Schedule queries."
-            },
             "SharedUserIn": {
                 "title": "SharedUserIn",
                 "required": [
@@ -2420,6 +2180,136 @@
                 },
                 "additionalProperties": false,
                 "description": "Fields returned by SharedUser queries."
+            },
+            "Schedule": {
+                "title": "Schedule",
+                "required": [
+                    "id",
+                    "name",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date",
+                    "next_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "next_date": {
+                        "title": "Next Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "A recurring schedule associated with a budget Category."
+            },
+            "ScheduleIn": {
+                "title": "ScheduleIn",
+                "required": [
+                    "name",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to create a Schedule for a Category."
+            },
+            "ScheduleChanges": {
+                "title": "ScheduleChanges",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer"
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating a Schedule, all are optional."
             }
         },
         "securitySchemes": {
