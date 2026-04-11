@@ -2318,7 +2318,7 @@
                 "flows": {
                     "password": {
                         "scopes": {},
-                        "tokenUrl": "token"
+                        "tokenUrl": "/token"
                     }
                 }
             }
