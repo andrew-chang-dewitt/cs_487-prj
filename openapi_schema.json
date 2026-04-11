@@ -1774,7 +1774,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "description": "Fields used when updating an Category, all are optional."
+                "description": "Fields used when updating a Category, all are optional."
             },
             "CategoryIn": {
                 "title": "CategoryIn",
@@ -1801,7 +1801,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "description": "Fields needed from user to create an Category."
+                "description": "Fields needed from user to create a Category."
             },
             "CategoryOut": {
                 "title": "CategoryOut",
