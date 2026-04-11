@@ -1,0 +1,2327 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "API Status"
+                ],
+                "summary": "Check API status.",
+                "description": "Check API status.",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Status"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get the currently authenticated User.",
+                "description": "Get the current user's information.",
+                "operationId": "get_user_user_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update the currently authenticated User's information.",
+                "description": "Update the current user's information.",
+                "operationId": "put_user_user_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserChanges"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create a new User.",
+                "description": "Save a new User to the database & return the new information.",
+                "operationId": "post_user_user_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete the currently authenticated User.",
+                "description": "Delete the current user from the database.",
+                "operationId": "delete_user_user_delete",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/user/password": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update the currently authenticated User's password.",
+                "description": "Update the current user's password.",
+                "operationId": "put_password_user_password_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "New Password",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/token": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get an authentication Token via an OAuth2 Request Form.",
+                "description": "POST `/token` handler.",
+                "operationId": "post_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_post_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/account": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get the Accounts for the currently authenticated User.",
+                "description": "Read all open accounts for given User.",
+                "operationId": "get_account_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Account Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AccountOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Create a new Account for the currently authenticated User.",
+                "description": "Create a new account for given User.",
+                "operationId": "post_account_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/account/{account_id}": {
+            "put": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Update the given Account.",
+                "description": "Update the given account with the given changes.",
+                "operationId": "put_id_account__account_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountChanges"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Delete the given Account.",
+                "description": "Permanently remove the given Account and all associated data.",
+                "operationId": "delete_id_account__account_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/account/{account_id}/closed": {
+            "put": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Mark the given Account as closed.",
+                "description": "Mark the given account as closed.",
+                "operationId": "put_closed_account__account_id__closed_put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/account/closed": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get all closed Accounts for current User.",
+                "description": "Return all closed accounts for the current user.",
+                "operationId": "get_closed_account_closed_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Closed Account Closed Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AccountOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/transaction": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Fetch all Transactions for the authenticated User.",
+                "description": "Get all Transactions.",
+                "operationId": "get_root_transaction_get",
+                "parameters": [
+                    {
+                        "description": "Only return Transactions belonging to this Account.",
+                        "required": false,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "description": "Only return Transactions belonging to this Account.",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return Transactions with matching payee.",
+                        "required": false,
+                        "schema": {
+                            "title": "Payee",
+                            "type": "string",
+                            "description": "Only return Transactions with matching payee."
+                        },
+                        "name": "payee",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return Transactions greater than or equal to amount.",
+                        "required": false,
+                        "schema": {
+                            "title": "Minimum Amount",
+                            "type": "number",
+                            "description": "Only return Transactions greater than or equal to amount."
+                        },
+                        "name": "minimum_amount",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return Transactions less than or equal to amount.",
+                        "required": false,
+                        "schema": {
+                            "title": "Maximum Amount",
+                            "type": "number",
+                            "description": "Only return Transactions less than or equal to amount."
+                        },
+                        "name": "maximum_amount",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return Transactions after the given date & time.",
+                        "required": false,
+                        "schema": {
+                            "title": "After",
+                            "type": "string",
+                            "description": "Only return Transactions after the given date & time.",
+                            "format": "date-time"
+                        },
+                        "name": "after",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return Transactions before the given date & time.",
+                        "required": false,
+                        "schema": {
+                            "title": "Before",
+                            "type": "string",
+                            "description": "Only return Transactions before the given date & time.",
+                            "format": "date-time"
+                        },
+                        "name": "before",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Only return specified number of Transactions.",
+                        "required": false,
+                        "schema": {
+                            "title": "Limit",
+                            "type": "integer",
+                            "description": "Only return specified number of Transactions.",
+                            "default": 50
+                        },
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Return given page of Transactions.",
+                        "required": false,
+                        "schema": {
+                            "title": "Page",
+                            "type": "integer",
+                            "description": "Return given page of Transactions.",
+                            "default": 0
+                        },
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Sort Transactions by given column.",
+                        "required": false,
+                        "schema": {
+                            "title": "Sort",
+                            "type": "string",
+                            "description": "Sort Transactions by given column.",
+                            "default": "timestamp"
+                        },
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Root Transaction Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TransactionOut"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Create a new Transaction for the given Account.",
+                "description": "Save given Transaction to database.",
+                "operationId": "post_root_transaction_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TransactionIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/transaction/{transaction_id}": {
+            "put": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Edit the given Transaction.",
+                "description": "Edit the given Transaction.",
+                "operationId": "put_id_transaction__transaction_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Transaction Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "transaction_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TransactionChanges"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Delete the given Transaction.",
+                "description": "Delete the given Transaction.",
+                "operationId": "delete_id_transaction__transaction_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Transaction Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "transaction_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/transaction/{transaction_id}/spent_from/{spent_from_id}": {
+            "put": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Mark Transaction as \"spent from\" the given Category",
+                "description": "Mark Transaction as Spent From given Category.",
+                "operationId": "put_spent_from_transaction__transaction_id__spent_from__spent_from_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Transaction Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "transaction_id",
+                        "in": "path"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Spent From Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "spent_from_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/balance/total": {
+            "get": {
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Get sum total Balance of all accounts for the current User.",
+                "operationId": "get_root_balance_total_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Balance"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/balance/account/{account_id}": {
+            "get": {
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Get the Balance for the given account.",
+                "operationId": "get_account_balance_account__account_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Balance"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/balance/category/{category_id}": {
+            "get": {
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Get the balance of a given Category.",
+                "operationId": "get_category_balance_category__category_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Balance"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/balance/available": {
+            "get": {
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Get the Available Balance.",
+                "operationId": "get_available_balance_available_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Balance"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/category": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get all Categories for current user.",
+                "operationId": "get_root_category_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Root Category Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create new Category.",
+                "operationId": "post_root_category_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/category/{category_id}": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get requested Category for current user.",
+                "operationId": "get_id_category__category_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update the given Category.",
+                "operationId": "put_id_category__category_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryChanges"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete the given Category.",
+                "description": "Permanently remove the given Category.",
+                "operationId": "delete_id_category__category_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/category/{category_id}/funds/{funds}": {
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Add given funds to Category.",
+                "description": "Add funds to (or remove funds from, if given as a negative) category.\n\nOptionally, include source/target category for funds to be taken\nfrom/sent to. Defaults to Available Balance if not given.",
+                "operationId": "put_funds_category__category_id__funds__funds__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Funds",
+                            "type": "number"
+                        },
+                        "name": "funds",
+                        "in": "path"
+                    },
+                    {
+                        "description": "Where to take funds from; default: Available Balance.",
+                        "required": false,
+                        "schema": {
+                            "title": "Other",
+                            "type": "string",
+                            "description": "Where to take funds from; default: Available Balance.",
+                            "format": "uuid"
+                        },
+                        "name": "other",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/transaction/import": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Batch import Transactions for the authenticated User.",
+                "description": "Import a list of Transactions in bulk for one or more Accounts.",
+                "operationId": "post_import_transaction_import_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Transactions",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TransactionIn"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Post Import Transaction Import Post",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TransactionOut"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/shared_user": {
+            "get": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Get all users sharing a budget with the current user.",
+                "description": "Read all shared-budget relationships for the current User.",
+                "operationId": "get_root_shared_user_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Root Shared User Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SharedUserOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Invite another User to share a budget.",
+                "description": "Create a shared-budget relationship by inviting another User.",
+                "operationId": "post_root_shared_user_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SharedUserIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SharedUserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/shared_user/{shared_user_id}": {
+            "delete": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Remove a shared-budget relationship.",
+                "description": "Remove the given shared-budget relationship, effectively leaving or revoking access to a shared budget.",
+                "operationId": "delete_id_shared_user__shared_user_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Shared User Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "shared_user_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SharedUserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/category/{category_id}/schedule": {
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Set or update the Schedule for the given Category.",
+                "description": "Create or replace the recurring schedule associated with the given Category.",
+                "operationId": "put_schedule_category__category_id__schedule_put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Remove the Schedule from the given Category.",
+                "description": "Delete the recurring schedule associated with the given Category.",
+                "operationId": "delete_schedule_category__category_id__schedule_delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AccountChanges": {
+                "title": "AccountChanges",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "closed": {
+                        "title": "Closed",
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating an Account, all are optional."
+            },
+            "AccountIn": {
+                "title": "AccountIn",
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields needed from user to create an Account."
+            },
+            "AccountOut": {
+                "title": "AccountOut",
+                "required": [
+                    "id",
+                    "name",
+                    "user_id",
+                    "closed"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "closed": {
+                        "title": "Closed",
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by Account queries."
+            },
+            "Balance": {
+                "title": "Balance",
+                "required": [
+                    "amount",
+                    "user_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "collection": {
+                        "title": "Collection",
+                        "type": "string"
+                    },
+                    "collection_id": {
+                        "title": "Collection Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "collection_type": {
+                        "title": "Collection Type",
+                        "anyOf": [
+                            {
+                                "enum": [
+                                    "account"
+                                ],
+                                "type": "string"
+                            },
+                            {
+                                "enum": [
+                                    "category"
+                                ],
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Balance information."
+            },
+            "Body_post_token_post": {
+                "title": "Body_post_token_post",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "title": "Grant Type",
+                        "pattern": "password",
+                        "type": "string"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    },
+                    "scope": {
+                        "title": "Scope",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "title": "Client Secret",
+                        "type": "string"
+                    }
+                }
+            },
+            "CategoryChanges": {
+                "title": "CategoryChanges",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "Updated schedule for this Category, or null to remove it.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ScheduleChanges"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating a Category, all are optional."
+            },
+            "CategoryIn": {
+                "title": "CategoryIn",
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "Optional recurring schedule to associate with this Category.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields needed from user to create a Category."
+            },
+            "CategoryOut": {
+                "title": "CategoryOut",
+                "required": [
+                    "id",
+                    "name",
+                    "user_id",
+                    "total_funds"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "total_funds": {
+                        "title": "Total Funds",
+                        "type": "number"
+                    },
+                    "schedule": {
+                        "title": "Schedule",
+                        "description": "The recurring schedule associated with this Category, if any.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Schedule"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by Category queries."
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Status": {
+                "title": "Status",
+                "required": [
+                    "message",
+                    "ok"
+                ],
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "ok": {
+                        "title": "Ok",
+                        "type": "boolean"
+                    }
+                },
+                "description": "Status Response."
+            },
+            "Token": {
+                "title": "Token",
+                "required": [
+                    "access_token"
+                ],
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "title": "Access Token",
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "title": "Token Type",
+                        "type": "string",
+                        "default": "bearer"
+                    }
+                },
+                "description": "Token fields."
+            },
+            "TransactionChanges": {
+                "title": "TransactionChanges",
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "payee": {
+                        "title": "Payee",
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "title": "Timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "account_id": {
+                        "title": "Account Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "spent_from": {
+                        "title": "Spent From",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Object for changing any of the fields on an existing Transaction."
+            },
+            "TransactionIn": {
+                "title": "TransactionIn",
+                "required": [
+                    "amount",
+                    "description",
+                    "payee",
+                    "timestamp",
+                    "account_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "payee": {
+                        "title": "Payee",
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "title": "Timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "account_id": {
+                        "title": "Account Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "spent_from": {
+                        "title": "Spent From",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when creating a new Transaction."
+            },
+            "TransactionOut": {
+                "title": "TransactionOut",
+                "required": [
+                    "id",
+                    "amount",
+                    "description",
+                    "payee",
+                    "timestamp",
+                    "account_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "payee": {
+                        "title": "Payee",
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "title": "Timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "account_id": {
+                        "title": "Account Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "spent_from": {
+                        "title": "Spent From",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when reading a Transaction."
+            },
+            "UserChanges": {
+                "title": "UserChanges",
+                "type": "object",
+                "properties": {
+                    "handle": {
+                        "title": "Handle",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "preferred_name": {
+                        "title": "Preferred Name",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating a User, all are optional."
+            },
+            "UserIn": {
+                "title": "UserIn",
+                "required": [
+                    "handle",
+                    "full_name",
+                    "preferred_name",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "handle": {
+                        "title": "Handle",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "preferred_name": {
+                        "title": "Preferred Name",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to create a new User."
+            },
+            "UserOut": {
+                "title": "UserOut",
+                "required": [
+                    "id",
+                    "handle",
+                    "full_name",
+                    "preferred_name"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "handle": {
+                        "title": "Handle",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "preferred_name": {
+                        "title": "Preferred Name",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by queries on User Model."
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            },
+            "SharedUserIn": {
+                "title": "SharedUserIn",
+                "required": [
+                    "handle"
+                ],
+                "type": "object",
+                "properties": {
+                    "handle": {
+                        "title": "Handle",
+                        "type": "string",
+                        "description": "The handle of the User to invite to the shared budget."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to invite a User to a shared budget."
+            },
+            "SharedUserOut": {
+                "title": "SharedUserOut",
+                "required": [
+                    "id",
+                    "owner_user_id",
+                    "shared_user_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "owner_user_id": {
+                        "title": "Owner User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "shared_user_id": {
+                        "title": "Shared User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by SharedUser queries."
+            },
+            "Schedule": {
+                "title": "Schedule",
+                "required": [
+                    "id",
+                    "name",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date",
+                    "next_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "next_date": {
+                        "title": "Next Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "A recurring schedule associated with a budget Category."
+            },
+            "ScheduleIn": {
+                "title": "ScheduleIn",
+                "required": [
+                    "name",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to create a Schedule for a Category."
+            },
+            "ScheduleChanges": {
+                "title": "ScheduleChanges",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer"
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating a Schedule, all are optional."
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "/token"
+                    }
+                }
+            }
+        }
+    }
+}
