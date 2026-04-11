@@ -491,7 +491,7 @@
                     "Account"
                 ],
                 "summary": "Get all closed Accounts for current User.",
-                "description": "Mark the given account as closed.",
+                "description": "Return all closed accounts for the current user.",
                 "operationId": "get_closed_account_closed_get",
                 "responses": {
                     "200": {
