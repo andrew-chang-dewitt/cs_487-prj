@@ -387,6 +387,53 @@
                         "OAuth2PasswordBearer": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Delete the given Account.",
+                "description": "Permanently remove the given Account and all associated data.",
+                "operationId": "delete_id_account__account_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Account Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "account_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/account/{account_id}/closed": {
@@ -1151,6 +1198,53 @@
                         "OAuth2PasswordBearer": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete the given Category.",
+                "description": "Permanently remove the given Category.",
+                "operationId": "delete_id_category__category_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Category Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "category_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/category/{category_id}/funds/{funds}": {
@@ -1201,6 +1295,415 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/transaction/import": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Batch import Transactions for the authenticated User.",
+                "description": "Import a list of Transactions in bulk for one or more Accounts.",
+                "operationId": "post_import_transaction_import_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Transactions",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TransactionIn"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Post Import Transaction Import Post",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TransactionOut"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/schedule": {
+            "get": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Get all Schedules for current user.",
+                "description": "Read all budget schedules for the current User.",
+                "operationId": "get_root_schedule_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Root Schedule Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ScheduleOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Create a new Schedule.",
+                "description": "Associate a recurring schedule with a budget Category.",
+                "operationId": "post_root_schedule_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScheduleOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/schedule/{schedule_id}": {
+            "get": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Get the requested Schedule.",
+                "description": "Read the given Schedule for the current User.",
+                "operationId": "get_id_schedule__schedule_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Schedule Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "schedule_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScheduleOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Update the given Schedule.",
+                "description": "Update the given Schedule with the given changes.",
+                "operationId": "put_id_schedule__schedule_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Schedule Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "schedule_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleChanges"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScheduleOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Delete the given Schedule.",
+                "description": "Permanently remove the given Schedule.",
+                "operationId": "delete_id_schedule__schedule_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Schedule Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "schedule_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScheduleOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/shared_user": {
+            "get": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Get all users sharing a budget with the current user.",
+                "description": "Read all shared-budget relationships for the current User.",
+                "operationId": "get_root_shared_user_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Root Shared User Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SharedUserOut"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Invite another User to share a budget.",
+                "description": "Create a shared-budget relationship by inviting another User.",
+                "operationId": "post_root_shared_user_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SharedUserIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SharedUserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/shared_user/{shared_user_id}": {
+            "delete": {
+                "tags": [
+                    "Shared User"
+                ],
+                "summary": "Remove a shared-budget relationship.",
+                "description": "Remove the given shared-budget relationship, effectively leaving or revoking access to a shared budget.",
+                "operationId": "delete_id_shared_user__shared_user_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Shared User Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "name": "shared_user_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SharedUserOut"
                                 }
                             }
                         }
@@ -1720,6 +2223,203 @@
                         "type": "string"
                     }
                 }
+            },
+            "ScheduleChanges": {
+                "title": "ScheduleChanges",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "category_id": {
+                        "title": "Category Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer"
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields used when updating a Schedule, all are optional."
+            },
+            "ScheduleIn": {
+                "title": "ScheduleIn",
+                "required": [
+                    "name",
+                    "category_id",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "category_id": {
+                        "title": "Category Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to create a new Schedule."
+            },
+            "ScheduleOut": {
+                "title": "ScheduleOut",
+                "required": [
+                    "id",
+                    "user_id",
+                    "name",
+                    "category_id",
+                    "amount",
+                    "period",
+                    "period_unit",
+                    "start_date",
+                    "next_date"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "category_id": {
+                        "title": "Category Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "title": "Amount",
+                        "type": "number"
+                    },
+                    "period": {
+                        "title": "Period",
+                        "type": "integer",
+                        "description": "How many period_units between each recurrence."
+                    },
+                    "period_unit": {
+                        "title": "Period Unit",
+                        "enum": [
+                            "days",
+                            "weeks",
+                            "months"
+                        ],
+                        "type": "string"
+                    },
+                    "start_date": {
+                        "title": "Start Date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "next_date": {
+                        "title": "Next Date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by Schedule queries."
+            },
+            "SharedUserIn": {
+                "title": "SharedUserIn",
+                "required": [
+                    "handle"
+                ],
+                "type": "object",
+                "properties": {
+                    "handle": {
+                        "title": "Handle",
+                        "type": "string",
+                        "description": "The handle of the User to invite to the shared budget."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields required to invite a User to a shared budget."
+            },
+            "SharedUserOut": {
+                "title": "SharedUserOut",
+                "required": [
+                    "id",
+                    "owner_user_id",
+                    "shared_user_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "owner_user_id": {
+                        "title": "Owner User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "shared_user_id": {
+                        "title": "Shared User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Fields returned by SharedUser queries."
             }
         },
         "securitySchemes": {
