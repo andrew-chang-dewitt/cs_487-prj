@@ -9,6 +9,7 @@ from .config import Config
 from .routers import (
     status,
     create_user,
+    create_account,
 )
 
 
@@ -41,5 +42,6 @@ def create_app(config: Optional[Config] = None) -> FastAPI:
 
     app.include_router(status)
     app.include_router(create_user(config))
+    app.include_router(create_account(config))
 
     return app
