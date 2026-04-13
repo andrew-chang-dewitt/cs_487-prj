@@ -2,11 +2,20 @@ from typing import Optional
 
 from fastapi import FastAPI
 
+from config import Config
 
-def create_app(config: Optional[str] = None) -> FastAPI:
+
+def create_app(config: Optional[Config] = None) -> FastAPI:
     """Application factory to create server instance from given config."""
 
-    app = FastAPI()
+    if config is None:
+        config = Config()
+
+
+    app = FastAPI(
+        # openapi_url="/api/openapi.json",
+        root_path=config.root_path,
+    )
 
     @app.get("/")
     def read_root():
