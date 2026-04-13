@@ -2,10 +2,11 @@
 
 from uuid import UUID
 
-from fastapi import status as status_code, Body
+from fastapi import status as status_code
 from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
 from psycopg2.errors import UniqueViolation  # type: ignore
+from pydantic import BaseModel
 
 from src.config import Config
 from src.models import (
@@ -14,6 +15,12 @@ from src.models import (
     UserOut,
     UserModel,
 )
+
+
+class PasswordChange(BaseModel):
+    """Request body for updating the current user's password."""
+
+    new_password: str
 
 
 def create_user(_config: Config) -> APIRouter:
@@ -60,10 +67,10 @@ def create_user(_config: Config) -> APIRouter:
     )
     async def put_password(
         user_id: UUID,
-        new_password: str = Body(...),
+        password_change: PasswordChange,
     ) -> UserOut:
         """Update the current user's password."""
-        result = await model.update.password(user_id, new_password)
+        result = await model.update.password(user_id, password_change.new_password)
 
         return result
 
@@ -72,6 +79,6 @@ def create_user(_config: Config) -> APIRouter:
     )
     async def delete_user(user_id: UUID) -> UserOut:
         """Delete the current user from the database."""
-        return await model.delete.one_by_id(str(user_id))
+        return await model.delete.one_by_id(user_id)
 
     return user
