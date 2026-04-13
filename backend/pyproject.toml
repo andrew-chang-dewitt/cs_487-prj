@@ -1,0 +1,23 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Backend API server for finance app."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "db-wrapper",
+    "fastapi[standard]>=0.135.3",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "D"]
+ignore = ["D107"]
+
+[tool.uv.sources]
+db-wrapper = { git = "https://github.com/andrew-chang-dewitt/lib-python-db-wrapper" }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.10",
+    "ty>=0.0.29",
+]
