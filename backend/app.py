@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import FastAPI
 
-from config import Config
+from .config import Config
 
 
 def create_app(config: Optional[Config] = None) -> FastAPI:
