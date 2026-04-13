@@ -1,4 +1,4 @@
-"""Router for `/status`"""
+"""Router for `/status`."""
 
 from fastapi.routing import APIRouter
 from pydantic import BaseModel  # pylint: disable=no-name-in-module

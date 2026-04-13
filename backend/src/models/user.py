@@ -26,9 +26,9 @@ class UserIn(UserBase):
 class UserChanges(BaseModel):
     """Fields used when updating a User, all are optional."""
 
-    handle: Optional[str]
-    full_name: Optional[str]
-    preferred_name: Optional[str]
+    handle: Optional[str] = None
+    full_name: Optional[str] = None
+    preferred_name: Optional[str] = None
 
 
 class UserOut(UserBase):
@@ -41,7 +41,6 @@ class UserDb(UserIn):
     """All fields on User in database records."""
 
     id: UUID
-    password: str
 
 
 class UserModel(DummyModel):
