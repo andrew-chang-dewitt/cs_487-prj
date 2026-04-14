@@ -21,10 +21,6 @@ def create_app(config: Optional[Config] = None) -> FastAPI:
         root_path=config.root_path,
     )
 
-    @app.get("/")
-    def read_root():
-        return {"Hello": "World"}
-
     app.include_router(status)
     app.include_router(create_user(config))
 
