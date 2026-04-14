@@ -70,4 +70,5 @@ class UserModel(DummyModel):
 
     def __init__(self) -> None:
         super().__init__()
+        self.create = UserModel.Create()
         self.update = UserModel.Update()
