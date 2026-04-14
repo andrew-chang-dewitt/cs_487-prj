@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from .config import Config
+from src.errors import TodoError
 from .routers import (
     status,
     create_user,
@@ -23,10 +24,10 @@ def create_app(config: Optional[Config] = None) -> FastAPI:
         root_path=config.root_path,
     )
 
-    @app.exception_handler(NotImplementedError)
-    async def not_implemented_sends_501(
-        req: Request, exc: NotImplementedError
-    ) -> JSONResponse:
+    @app.exception_handler(TodoError)
+    async def todo_sends_501(req: Request, exc: TodoError) -> JSONResponse:
+        print(repr(exc))
+
         return JSONResponse(
             status_code=501,
             content={

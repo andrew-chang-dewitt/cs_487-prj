@@ -6,6 +6,7 @@ from uuid import UUID
 from psycopg2.errors import UniqueViolation  # type: ignore
 from pydantic import BaseModel
 
+from src.errors import TodoError
 from .errors import DuplicateError
 from .dummy_model import DummyModel
 
@@ -64,7 +65,7 @@ class UserModel(DummyModel):
 
         async def password(self, id: UUID, pwd: str) -> UserOut:
             """Update the password for the User identified by `id`."""
-            raise NotImplementedError("TODO...")
+            raise TodoError()
 
     update: Update
 
