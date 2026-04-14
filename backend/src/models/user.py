@@ -50,6 +50,11 @@ class UserModel(DummyModel):
         """Adds password method."""
 
         async def password(self, id: UUID, pwd: str) -> UserOut:
+            """Update the password for the User identified by `id`."""
             raise NotImplementedError("TODO...")
 
     update: Update
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.update = UserModel.Update()

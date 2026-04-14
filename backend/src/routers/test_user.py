@@ -94,5 +94,194 @@ class TestPostUser(unittest.TestCase):
         self.assertIn("handle", invalid_fields)
 
 
+class TestGetUser(unittest.TestCase):
+    """Tests for the GET /user endpoint."""
+
+    def setUp(self) -> None:
+        """Set up the test client with the application."""
+        self.app = create_app()
+        self.client = TestClient(self.app)
+        self.user_id = uuid4()
+        self.mock_user = UserOut(
+            id=self.user_id,
+            handle="testuser",
+            full_name="Test User",
+            preferred_name="Test",
+        )
+
+    def test_valid_id_returns_200_with_user_out(self) -> None:
+        """GET /user with a valid UUID returns 200 and a UserOut body."""
+        with patch(
+            "src.models.dummy_model.DummyModel.Read.one_by_id",
+            new_callable=AsyncMock,
+            return_value=self.mock_user,
+        ):
+            response = self.client.get("/user", params={"user_id": str(self.user_id)})
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["id"], str(self.user_id))
+        self.assertEqual(data["handle"], "testuser")
+        self.assertEqual(data["full_name"], "Test User")
+        self.assertEqual(data["preferred_name"], "Test")
+
+    def test_invalid_uuid_returns_422(self) -> None:
+        """GET /user with an invalid UUID query parameter returns 422."""
+        response = self.client.get("/user", params={"user_id": "not-a-uuid"})
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()["detail"]
+        invalid_fields = {err["loc"][-1] for err in detail}
+        self.assertIn("user_id", invalid_fields)
+
+
+class TestPutUser(unittest.TestCase):
+    """Tests for the PUT /user endpoint."""
+
+    def setUp(self) -> None:
+        """Set up the test client with the application."""
+        self.app = create_app()
+        self.client = TestClient(self.app)
+        self.user_id = uuid4()
+        self.mock_user = UserOut(
+            id=self.user_id,
+            handle="updateduser",
+            full_name="Updated User",
+            preferred_name="Updated",
+        )
+
+    def test_valid_handle_update_returns_200_with_updated_user_out(self) -> None:
+        """PUT /user with a valid handle change returns 200 and updated UserOut body."""
+        with patch(
+            "src.models.dummy_model.DummyModel.Update.changes",
+            new_callable=AsyncMock,
+            return_value=self.mock_user,
+        ):
+            response = self.client.put(
+                "/user",
+                params={"user_id": str(self.user_id)},
+                json={"handle": "updateduser"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["id"], str(self.user_id))
+        self.assertEqual(data["handle"], "updateduser")
+
+    def test_invalid_uuid_returns_422(self) -> None:
+        """PUT /user with an invalid UUID query parameter returns 422."""
+        response = self.client.put(
+            "/user",
+            params={"user_id": "not-a-uuid"},
+            json={"handle": "updateduser"},
+        )
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()["detail"]
+        invalid_fields = {err["loc"][-1] for err in detail}
+        self.assertIn("user_id", invalid_fields)
+
+
+class TestDeleteUser(unittest.TestCase):
+    """Tests for the DELETE /user endpoint."""
+
+    def setUp(self) -> None:
+        """Set up the test client with the application."""
+        self.app = create_app()
+        self.client = TestClient(self.app)
+        self.user_id = uuid4()
+        self.mock_user = UserOut(
+            id=self.user_id,
+            handle="testuser",
+            full_name="Test User",
+            preferred_name="Test",
+        )
+
+    def test_valid_id_returns_200_with_deleted_user_out(self) -> None:
+        """DELETE /user with a valid UUID returns 200 and the deleted UserOut body."""
+        with patch(
+            "src.models.dummy_model.DummyModel.Delete.one_by_id",
+            new_callable=AsyncMock,
+            return_value=self.mock_user,
+        ):
+            response = self.client.delete(
+                "/user", params={"user_id": str(self.user_id)}
+            )
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["id"], str(self.user_id))
+        self.assertEqual(data["handle"], "testuser")
+
+    def test_invalid_uuid_returns_422(self) -> None:
+        """DELETE /user with an invalid UUID query parameter returns 422."""
+        response = self.client.delete("/user", params={"user_id": "not-a-uuid"})
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()["detail"]
+        invalid_fields = {err["loc"][-1] for err in detail}
+        self.assertIn("user_id", invalid_fields)
+
+
+class TestPutPassword(unittest.TestCase):
+    """Tests for the PUT /user/password endpoint."""
+
+    def setUp(self) -> None:
+        """Set up the test client with the application."""
+        self.app = create_app()
+        self.client = TestClient(self.app)
+        self.user_id = uuid4()
+        self.mock_user = UserOut(
+            id=self.user_id,
+            handle="testuser",
+            full_name="Test User",
+            preferred_name="Test",
+        )
+
+    def test_valid_request_returns_200_with_user_out(self) -> None:
+        """PUT /user/password with valid data returns 200 and a UserOut body."""
+        with patch(
+            "src.models.user.UserModel.Update.password",
+            new_callable=AsyncMock,
+            return_value=self.mock_user,
+        ):
+            response = self.client.put(
+                "/user/password",
+                params={"user_id": str(self.user_id)},
+                json={"new_password": "newpass123"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["id"], str(self.user_id))
+        self.assertEqual(data["handle"], "testuser")
+
+    def test_missing_new_password_field_returns_422(self) -> None:
+        """PUT /user/password with a missing `new_password` field returns 422."""
+        response = self.client.put(
+            "/user/password",
+            params={"user_id": str(self.user_id)},
+            json={},
+        )
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()["detail"]
+        missing_fields = {err["loc"][-1] for err in detail}
+        self.assertIn("new_password", missing_fields)
+
+    def test_invalid_uuid_returns_422(self) -> None:
+        """PUT /user/password with an invalid UUID query parameter returns 422."""
+        response = self.client.put(
+            "/user/password",
+            params={"user_id": "not-a-uuid"},
+            json={"new_password": "newpass123"},
+        )
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()["detail"]
+        invalid_fields = {err["loc"][-1] for err in detail}
+        self.assertIn("user_id", invalid_fields)
+
+
 if __name__ == "__main__":
     unittest.main()
