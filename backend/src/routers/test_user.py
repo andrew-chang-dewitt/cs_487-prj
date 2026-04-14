@@ -4,6 +4,8 @@ import unittest
 from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
+from psycopg2.errors import UniqueViolation  # type: ignore
+
 from fastapi.testclient import TestClient
 
 from src.app import create_app
@@ -92,6 +94,25 @@ class TestPostUser(unittest.TestCase):
         detail = response.json()["detail"]
         invalid_fields = {err["loc"][-1] for err in detail}
         self.assertIn("handle", invalid_fields)
+
+    def test_duplicate_handle_returns_409(self) -> None:
+        """POST /user with a handle that already exists returns 409."""
+        with patch(
+            "src.models.dummy_model.DummyModel.Create.new",
+            new_callable=AsyncMock,
+            side_effect=UniqueViolation(),
+        ):
+            response = self.client.post(
+                "/user",
+                json={
+                    "handle": "existinguser",
+                    "full_name": "Existing User",
+                    "preferred_name": "Existing",
+                    "password": "password123",
+                },
+            )
+
+        self.assertEqual(response.status_code, 409)
 
 
 class TestGetUser(unittest.TestCase):
