@@ -50,7 +50,7 @@ class UserModel(DummyModel):
     class Create(DummyModel.Create):
         """Create ops."""
 
-        async def new[UserIn, UserOut](self, obj: UserIn) -> UserOut:
+        async def new(self, obj: UserIn) -> UserOut:
             """Save a new User to the database & return the new information."""
             try:
                 return await super().new(obj)
