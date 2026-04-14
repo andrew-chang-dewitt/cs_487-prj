@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import status as status_code, Depends
+from fastapi import status as status_code
 from fastapi.routing import APIRouter
 
 from src.config import Config
@@ -33,7 +33,7 @@ def create_account(config: Config) -> APIRouter:
     async def post(new_account: AccountIn, user_id: UUID) -> AccountOut:
         """Create a new account for given User."""
         return await model.create.new(
-            AccountNewDb(**new_account.dict(), user_id=user_id)
+            AccountNewDb(**new_account.model_dump(), user_id=user_id)
         )
 
     @account.get(
