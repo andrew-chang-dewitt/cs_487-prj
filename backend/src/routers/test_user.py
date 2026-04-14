@@ -34,7 +34,7 @@ class TestPostUser(unittest.TestCase):
         )
 
         with patch(
-            "src.models.dummy_model.DummyModel.Create.new",
+            "src.models.user.UserModel.Create.new",
             new_callable=AsyncMock,
             return_value=mock_user,
         ):
@@ -97,7 +97,7 @@ class TestPostUser(unittest.TestCase):
     def test_duplicate_handle_returns_409(self) -> None:
         """POST /user with a handle that already exists returns 409."""
         with patch(
-            "src.models.dummy_model.DummyModel.Create.new",
+            "src.models.user.UserModel.Create.new",
             new_callable=AsyncMock,
             side_effect=DuplicateError("msg"),
         ):
