@@ -50,10 +50,11 @@ class AccountModel(DummyModel):
         async def many_by_user(
             self, user_id: UUID, closed: bool = False
         ) -> list[AccountOut]:
+            """Return accounts for the given user, filtered by closed status."""
             raise NotImplementedError("TODO...")
 
     read: Read
 
     def __init__(self) -> None:
-        super()
+        super().__init__()
         self.read = AccountModel.Read()
