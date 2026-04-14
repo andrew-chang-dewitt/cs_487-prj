@@ -22,7 +22,7 @@ class TestPostUser(unittest.TestCase):
         """POST /user with valid data returns 201 and a UserOut body.
 
         The response body should contain the submitted field values plus a
-        newly generated ``id`` field.
+        newly generated `id` field.
         """
         user_id = uuid4()
         mock_user = UserOut(
