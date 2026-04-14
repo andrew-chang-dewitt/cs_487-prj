@@ -1,11 +1,12 @@
 """Routes under `/user`."""
 
+from src.models.errors import DuplicateError
+
 from uuid import UUID
 
 from fastapi import status as status_code
 from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
-from psycopg2.errors import UniqueViolation  # type: ignore
 from pydantic import BaseModel
 
 from src.config import Config
@@ -39,9 +40,10 @@ def create_user(_config: Config) -> APIRouter:
         """Save a new User to the database & return the new information."""
         try:
             return await model.create.new(new_user)
-        except UniqueViolation as exc:
+        except DuplicateError as exc:
             raise HTTPException(
-                409, detail=f"User with handle {new_user.handle} already exists."
+                409,
+                detail=exc.msg,
             ) from exc
 
     @user.get(

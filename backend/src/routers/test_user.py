@@ -4,12 +4,11 @@ import unittest
 from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
-from psycopg2.errors import UniqueViolation  # type: ignore
-
 from fastapi.testclient import TestClient
 
 from src.app import create_app
 from src.models.user import UserOut
+from src.models.errors import DuplicateError
 
 
 class TestPostUser(unittest.TestCase):
@@ -100,7 +99,7 @@ class TestPostUser(unittest.TestCase):
         with patch(
             "src.models.dummy_model.DummyModel.Create.new",
             new_callable=AsyncMock,
-            side_effect=UniqueViolation(),
+            side_effect=DuplicateError("msg"),
         ):
             response = self.client.post(
                 "/user",

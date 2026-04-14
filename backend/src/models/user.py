@@ -1,11 +1,12 @@
 """User* data objects."""
 
+from typing import Optional
 from uuid import UUID
 
-from typing import Optional
-
+from psycopg2.errors import UniqueViolation  # type: ignore
 from pydantic import BaseModel
 
+from .errors import DuplicateError
 from .dummy_model import DummyModel
 
 
@@ -45,6 +46,18 @@ class UserDb(UserIn):
 
 class UserModel(DummyModel):
     """Dummy ORM for User objects."""
+
+    class Create(DummyModel.Create):
+        """Create ops."""
+
+        async def new[UserIn, UserOut](self, obj: UserIn) -> UserOut:
+            """Save a new User to the database & return the new information."""
+            try:
+                return await super().new(obj)
+            except UniqueViolation as exc:
+                raise DuplicateError(
+                    f"User with handle {obj.handle} already exists."
+                ) from exc
 
     class Update(DummyModel.Update):
         """Adds password method."""
