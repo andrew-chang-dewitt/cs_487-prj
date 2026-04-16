@@ -1,0 +1,16 @@
+# ignore Python virtual environments
+.venv/
+venv/
+
+# ignore Python cache files
+__pycache__/
+*.pyc
+
+# ignore git + system files
+.git/
+
+# ignore node modules (for future frontend)
+node_modules
+
+# ignore logs
+*.log
