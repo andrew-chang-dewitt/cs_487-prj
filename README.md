@@ -28,7 +28,8 @@ This project is fully containerized. You should not need to install Python, depe
   From the **root directory** of the project, run:
 
   ```bash
-  docker compose up --build```
+  docker compose up --build
+  ```
 
   This will:
 
@@ -67,12 +68,14 @@ This project is fully containerized. You should not need to install Python, depe
 
   Then run:
   ```bash
-  docker compose down```
+  docker compose down
+  ```
 
   Rebuild with:
   ```bash
   docker compose down
-  docker compose up --build```
+  docker compose up --build
+  ```
 
 ---
 
@@ -94,7 +97,8 @@ This project is fully containerized. You should not need to install Python, depe
   If you prefer to run locally/ok with setting up dependencies manually:
 
   ```bash
-  cd backend uv run fastapi dev src```
+  cd backend uv run fastapi dev src
+  ```
 
   Then open: http://127.0.0.1:8000/docs
 

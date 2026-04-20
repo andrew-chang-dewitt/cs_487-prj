@@ -16,9 +16,6 @@ COPY . .
 # install dependencies from pyproject.toml
 RUN uv sync
 
-# exposing port 8000
-# EXPOSE 8000
-
 # host 0.0.0.0 allows external access
 # port 8000 matches exposed port
 # Run FastAPI app in "production mode"
