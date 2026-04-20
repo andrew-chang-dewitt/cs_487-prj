@@ -96,7 +96,7 @@ docker compose up --build
 "docker: command not found"
 Docker is not installed or not running.
 
-Port 800 alread in use
+Port 8000 already in use
 Another application is using the port. Close the other application or change the port in the docker-compose.yml
 
 Changes not showing:
