@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    container_name: finance_backend
+    ports: # mapping local machine port -> container port
+      - "8000:8000"
+
+    environment: # environment variables passed into backend
+      - API_ROOT_PATH=
+      - DB_HOST=db      # IMPORTANT: use service name "db"
+      - DB_PORT=5432
+      - DB_NAME=finance
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on: # ensures database starts before the backend
+      - db
+
+  db:
+    image: postgres:15 # official PostgresSQL image
+    container_name: finance_db
+    restart: always # if crash, auto restart
+    environment: # setup of initial database credentials
+      POSTGRES_DB: finance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: # exposing db port for debugging purposes
+      - "5432:5432"
