@@ -6,7 +6,7 @@ This project is a full-stack application consisting of:
 
 - **Backend**: FastAPI (Python)
 - **Database**: PostgreSQL
-- **Frontend**: (***to be implemented)
+- **Frontend**: (\*\*\*to be implemented)
 
 The backend exposes a REST API that serves JSON and communicates with a PostgreSQL database.
 
@@ -21,33 +21,43 @@ This project is fully containerized. You should not need to install Python, depe
 - Install Docker Desktop - https://www.docker.com/products/docker-desktop/
 - Ensure Docker Desktop is open and functional
 
-  ---
+  ***
 
 ## Start the application
 
-  From the **root directory** of the project, run:
+From the **root directory** of the project, run:
 
-  ```bash
-  docker compose up --build
-  ```
+```bash
+docker compose up --build
+```
 
-  This will:
+This will:
 
 - Build the backend container
 - Start the PostgresSQL database
 - Start the FastAPI server
 
+### Dev services
+
+If you want to just run the database service in docker (i.e. when doing development work on the backend application), run:
+
+```bash
+docker compose -f db.docker-compose.yml up
+```
+
+Then start the desired services separately, providing the necessary database connection information.
+
 ---
 
 ## Access the application
 
-  Once running, open your browser:
+Once running, open your browser:
 
 - Backend API: http://localhost:8000
 - Interactive API Docs: http://localhost:8000/docs
 - OpenAPI Schema: http://localhost:8000/openapi.json
 
- Use /docs to test endpoints interactively
+Use /docs to test endpoints interactively
 
 ---
 
@@ -58,51 +68,53 @@ This project is fully containerized. You should not need to install Python, depe
 3. Click "Try it out"
 4. Click "Execute"
 
-  You will see the response immediately.
+You will see the response immediately.
 
 ---
 
 ## Stopping the project
 
-  Press: CTRL + C
+Press: CTRL + C
 
-  Then run:
-  ```bash
-  docker compose down
-  ```
+Then run:
 
-  Rebuild with:
-  ```bash
-  docker compose down
-  docker compose up --build
-  ```
+```bash
+docker compose down
+```
+
+Rebuild with:
+
+```bash
+docker compose down
+docker compose up --build
+```
 
 ---
 
 ## Common Issues and Fixes
 
-  "docker: command not found"
-  Docker is not installed or not running.
+"docker: command not found"
+Docker is not installed or not running.
 
-  Port 800 alread in use
-  Another application is using the port. Close the other application or change the port in the docker-compose.yml
+Port 800 alread in use
+Another application is using the port. Close the other application or change the port in the docker-compose.yml
 
-  Changes not showing:
-  Rebuild the containers(described in previous section)
+Changes not showing:
+Rebuild the containers(described in previous section)
 
 ---
 
 ## Development without Docker(Optional)
 
-  If you prefer to run locally/ok with setting up dependencies manually:
+If you prefer to run locally/ok with setting up dependencies manually:
 
-  ```bash
-  cd backend uv run fastapi dev src
-  ```
+```bash
+cd backend uv run fastapi dev src
+```
 
-  Then open: http://127.0.0.1:8000/docs
+Then open: http://127.0.0.1:8000/docs
 
-  You will need:
+You will need:
 
 - Python installed
 - uv installed
