@@ -5,7 +5,7 @@ from uuid import UUID
 from fastapi import status as status_code
 from fastapi.routing import APIRouter
 
-from src.config import Config
+from src.context import Context
 from src.models import (
     AccountChanges,
     AccountIn,
@@ -15,7 +15,7 @@ from src.models import (
 )
 
 
-def create_account(config: Config) -> APIRouter:
+def create_account(_ctx: Context) -> APIRouter:
     """Create a account router & model with access to the given database."""
     # setup db & Account model
     model = AccountModel()

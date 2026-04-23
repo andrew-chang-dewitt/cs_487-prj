@@ -1,25 +1,35 @@
 """Router for status endpoint at root."""
 
+from dataclasses import dataclass
+
+from fastapi import status as status_code
 from fastapi.routing import APIRouter
-from pydantic import BaseModel  # pylint: disable=no-name-in-module
+
+from src.context import Context
 
 
-class Status(BaseModel):
+@dataclass
+class Status:
     """Status Response."""
 
     # pylint: disable=too-few-public-methods
 
-    message: str
-    ok: bool
+    message: str = "The API is up."
+    ok: bool = True
 
 
-# @app.get("/")
-async def root() -> Status:
-    """Check API status."""
-    return Status(message="The API is up.", ok=True)
+def create_status(_ctx: Context) -> APIRouter:
+    """Create a account router & model with access to the given database."""
+    status = APIRouter(tags=["API Status"])
 
+    @status.get(
+        "/",
+        status_code=status_code.HTTP_200_OK,
+        response_model=Status,
+        summary="Check API status.",
+    )
+    async def get_status():
+        """Check status of api service."""
+        return Status()
 
-status = APIRouter(tags=["API Status"])
-status.add_api_route(
-    "/", root, methods=["GET"], response_model=Status, summary="Check API status."
-)
+    return status
