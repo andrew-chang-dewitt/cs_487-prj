@@ -11,12 +11,14 @@ from src.errors import TodoError
 from src.routers import (
     create_account,
     create_status,
+    create_token,
     create_user,
 )
 
 
 def create_app(ctx: Context = Context()) -> FastAPI:
     """Application factory to create server instance from given config."""
+
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         """Load database on startup & cleanup on shutdown."""
@@ -52,6 +54,7 @@ def create_app(ctx: Context = Context()) -> FastAPI:
         )
 
     app.include_router(create_status(ctx))
+    app.include_router(create_token(ctx))
     app.include_router(create_user(ctx))
     app.include_router(create_account(ctx))
 

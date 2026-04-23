@@ -21,3 +21,5 @@ class Config:
     db_user: str = os.getenv("DB_USER", "postgres")
     db_password: str = os.getenv("DB_PASSWORD", "postgres")
 
+    # application key used for auth token signing
+    jwt_key: str | None = os.getenv("APP_KEY")

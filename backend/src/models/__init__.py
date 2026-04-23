@@ -7,6 +7,7 @@ from .account import (
     AccountOut,
     AccountModel,
 )
+from .token import Token
 from .user import (
     UserChanges,
     UserIn,
@@ -20,6 +21,7 @@ __all__ = [
     "AccountNew",
     "AccountOut",
     "AccountModel",
+    "Token",
     "UserChanges",
     "UserIn",
     "UserOut",

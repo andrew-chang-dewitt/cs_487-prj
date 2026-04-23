@@ -1,10 +1,9 @@
 """Routes under `/user`."""
 
-from src.models.errors import DuplicateError
-
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import status as status_code
+from fastapi import status as status_code, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
 from pydantic import BaseModel
@@ -16,6 +15,8 @@ from src.models import (
     UserOut,
     UserModel,
 )
+from src.models.errors import DuplicateError
+from src.security import create_auth_dep
 
 
 class PasswordChange(BaseModel):
@@ -27,6 +28,7 @@ class PasswordChange(BaseModel):
 def create_user(ctx: Context) -> APIRouter:
     """Create a user router & model from given config."""
     model = UserModel(ctx.database)
+    auth_user = create_auth_dep(ctx.database, ctx.jwt_key)
 
     user = APIRouter(prefix="/user", tags=["User"])
 
@@ -49,7 +51,7 @@ def create_user(ctx: Context) -> APIRouter:
     @user.get(
         "", response_model=UserOut, summary="Get the currently authenticated User."
     )
-    async def get_user(user_id: UUID) -> UserOut:
+    async def get_user(user_id: Annotated[UUID, Depends(auth_user)]) -> UserOut:
         """Get the current user's information."""
         return await model.read.one_by_id(user_id)
 
@@ -58,7 +60,9 @@ def create_user(ctx: Context) -> APIRouter:
         response_model=UserOut,
         summary="Update the currently authenticated User's information.",
     )
-    async def put_user(changes: UserChanges, user_id: UUID) -> UserOut:
+    async def put_user(
+        changes: UserChanges, user_id: Annotated[UUID, Depends(auth_user)]
+    ) -> UserOut:
         """Update the current user's information."""
         return await model.update.changes(user_id, changes)
 
@@ -68,7 +72,7 @@ def create_user(ctx: Context) -> APIRouter:
         summary="Update the currently authenticated User's password.",
     )
     async def put_password(
-        user_id: UUID,
+        user_id: Annotated[UUID, Depends(auth_user)],
         password_change: PasswordChange,
     ) -> UserOut:
         """Update the current user's password."""
@@ -79,7 +83,7 @@ def create_user(ctx: Context) -> APIRouter:
     @user.delete(
         "", response_model=UserOut, summary="Delete the currently authenticated User."
     )
-    async def delete_user(user_id: UUID) -> UserOut:
+    async def delete_user(user_id: Annotated[UUID, Depends(auth_user)]) -> UserOut:
         """Delete the current user from the database."""
         return await model.delete.one_by_id(str(user_id))
 

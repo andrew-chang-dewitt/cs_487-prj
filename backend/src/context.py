@@ -14,6 +14,7 @@ class Context:
 
     database: Client
     root_path: str
+    jwt_key: str
 
     def __init__(self, config: Config = Config()) -> None:
         self.database = create_client(
@@ -26,3 +27,31 @@ class Context:
             )
         )
         self.root_path = config.root_path
+
+        if config.jwt_key is None:
+            self.jwt_key = _get_app_key_from_file()
+        else:
+            self.jwt_key = config.jwt_key
+
+
+def _get_app_key_from_file() -> str:
+    secrets_files = (f for f in ["/run/secrets/app_key", "./.secrets/app_key.txt"])
+
+    app_key: str | None = None
+
+    # check list of paths for key
+    for path in secrets_files:
+        try:
+            with open(path, "r") as key_file:
+                app_key = str(key_file.readline())
+                # exit iteration when first key is found
+                break
+        except FileNotFoundError:
+            pass
+
+    if app_key is None:
+        raise ValueError(
+            "No value for backend Application Key found in enviornment or secrets."
+        )
+
+    return app_key

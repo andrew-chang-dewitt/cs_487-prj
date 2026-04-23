@@ -8,6 +8,7 @@ dependencies = [
     "db-wrapper",
     "fastapi-swagger>=0.4.48",
     "fastapi[standard]>=0.135.3",
+    "pyjwt>=2.12.1",
 ]
 
 [tool.ruff.lint]
