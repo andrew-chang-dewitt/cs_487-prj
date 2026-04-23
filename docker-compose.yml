@@ -7,7 +7,6 @@ services:
     container_name: finance_backend
     ports: # mapping local machine port -> container port
       - "8000:8000"
-
     environment: # environment variables passed into backend
       - API_ROOT_PATH=
       - DB_HOST=db      # IMPORTANT: use service name "db"
@@ -15,5 +14,11 @@ services:
       - DB_NAME=finance
       - DB_USER=postgres
       - DB_PASSWORD=postgres
+    secrets:
+      - app_key
     depends_on: # ensures database starts before the backend
       - db
+
+secrets:
+  app_key:
+    file: .secrets/app_key.txt
