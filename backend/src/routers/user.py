@@ -26,7 +26,7 @@ class PasswordChange(BaseModel):
 
 def create_user(ctx: Context) -> APIRouter:
     """Create a user router & model from given config."""
-    model = UserModel()
+    model = UserModel(ctx.database)
 
     user = APIRouter(prefix="/user", tags=["User"])
 
@@ -81,6 +81,6 @@ def create_user(ctx: Context) -> APIRouter:
     )
     async def delete_user(user_id: UUID) -> UserOut:
         """Delete the current user from the database."""
-        return await model.delete.one_by_id(user_id)
+        return await model.delete.one_by_id(str(user_id))
 
     return user

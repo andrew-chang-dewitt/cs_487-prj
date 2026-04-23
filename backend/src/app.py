@@ -1,6 +1,6 @@
 """Backend API Server entry point."""
 
-from typing import Optional
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -17,7 +17,15 @@ from src.routers import (
 
 def create_app(ctx: Context = Context()) -> FastAPI:
     """Application factory to create server instance from given config."""
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        """Load database on startup & cleanup on shutdown."""
+        await ctx.database.connect()
+        yield
+        await ctx.database.disconnect()
+
     app = FastAPI(
+        lifespan=lifespan,
         root_path=ctx.root_path,
         # disable built-in docs/static paths, then...
         docs_url=None,
