@@ -8,8 +8,12 @@ import os
 class Config:
     """Application configuration object."""
 
+    # specify url prefix to use before the api route (e.g. a `root_path` of
+    # "/api" means a route defined in app to be at "/some/path" will actually
+    # be at "/api/some/path")
     root_path: str = os.getenv("API_ROOT_PATH", default="")
 
+    # database connection parameters
     # configuration values come from /docker-compose.yml
     db_host: str = os.getenv("DB_HOST", "localhost")
     db_port: int = int(os.getenv("DB_PORT", 5432))

@@ -9,7 +9,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
 from pydantic import BaseModel
 
-from src.config import Config
+from src.context import Context
 from src.models import (
     UserChanges,
     UserIn,
@@ -24,7 +24,7 @@ class PasswordChange(BaseModel):
     new_password: str
 
 
-def create_user(_config: Config) -> APIRouter:
+def create_user(ctx: Context) -> APIRouter:
     """Create a user router & model from given config."""
     model = UserModel()
 

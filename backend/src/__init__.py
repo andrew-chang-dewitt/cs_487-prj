@@ -2,4 +2,4 @@
 
 from src.app import create_app
 
-app = create_app(None)
+app = create_app()

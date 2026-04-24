@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:15 # official PostgresSQL image
+    container_name: finance_db
+    restart: always # if crash, auto restart
+    environment: # setup of initial database credentials
+      POSTGRES_DB: finance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: # exposing db port for debugging purposes
+      - "5432:5432"
