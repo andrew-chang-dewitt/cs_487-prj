@@ -72,6 +72,19 @@ You will see the response immediately.
 
 ---
 
+## Database Initialization
+
+  The PostrgresSQL database is automatically initialized using `database/init.sql` when the container starts for the first time.
+
+  If you make changes to the schema, please reset the database:
+
+  ```bash
+    docker compose down -v
+    docker compose up --build
+  ```
+
+---
+
 ## Stopping the project
 
 Press: CTRL + C
