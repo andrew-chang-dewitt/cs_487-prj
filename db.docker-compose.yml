@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:15 # official PostgresSQL image
+    build: ./database
     container_name: finance_db
     restart: always # if crash, auto restart
     environment: # setup of initial database credentials
@@ -9,3 +9,5 @@ services:
       POSTGRES_PASSWORD: postgres
     ports: # exposing db port for debugging purposes
       - "5432:5432"
+    volumes:
+      - ./database/schema:/docker-entrypoint-initdb.d
