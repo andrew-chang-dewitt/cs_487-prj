@@ -9,16 +9,16 @@ from src.context import Context
 from src.models import (
     AccountChanges,
     AccountIn,
-    AccountNewDb,
+    AccountNew,
     AccountOut,
     AccountModel,
 )
 
 
-def create_account(_ctx: Context) -> APIRouter:
+def create_account(ctx: Context) -> APIRouter:
     """Create a account router & model with access to the given database."""
     # setup db & Account model
-    model = AccountModel()
+    model = AccountModel(ctx.database)
 
     # set up account router
     account = APIRouter(prefix="/account", tags=["Account"])
@@ -33,7 +33,7 @@ def create_account(_ctx: Context) -> APIRouter:
     async def post(new_account: AccountIn, user_id: UUID) -> AccountOut:
         """Create a new account for given User."""
         return await model.create.new(
-            AccountNewDb(**new_account.model_dump(), user_id=user_id)
+            AccountNew(**new_account.model_dump(), user_id=user_id)
         )
 
     @account.get(
@@ -52,7 +52,7 @@ def create_account(_ctx: Context) -> APIRouter:
         account_id: UUID, changes: AccountChanges, user_id: UUID
     ) -> AccountOut:
         """Update the given account with the given changes."""
-        return await model.update.changes(account_id, changes)
+        return await model.update.changes(account_id, user_id, changes)
 
     @account.put(
         "/{account_id}/closed",
@@ -61,7 +61,9 @@ def create_account(_ctx: Context) -> APIRouter:
     )
     async def put_closed(account_id: UUID, user_id: UUID) -> AccountOut:
         """Mark the given account as closed."""
-        return await model.update.changes(account_id, AccountChanges(closed=True))
+        return await model.update.changes(
+            account_id, user_id, AccountChanges(closed=True)
+        )
 
     @account.get(
         "/closed",

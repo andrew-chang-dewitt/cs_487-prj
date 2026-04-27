@@ -1,6 +1,6 @@
 """User* data objects."""
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Type
 from uuid import UUID
 
 from db_wrapper.client import AsyncClient
@@ -15,7 +15,7 @@ from db_wrapper.model import (
 )
 from db_wrapper.model.base import NoResultFound
 
-from src.models.base import Base, BaseDb
+from .base import Base, BaseDb
 
 
 class UserBase(Base):
@@ -35,9 +35,9 @@ class UserIn(UserBase):
 class UserChanges(Base):
     """Fields used when updating a User, all are optional."""
 
-    handle: Optional[str]
-    full_name: Optional[str]
-    preferred_name: Optional[str]
+    handle: Optional[str] = None
+    full_name: Optional[str] = None
+    preferred_name: Optional[str] = None
 
     class Config:
         """Configure UserChanges Pydantic features."""
@@ -48,6 +48,19 @@ class UserChanges(Base):
 
 class UserOut(UserBase, BaseDb):
     """Fields returned by queries on User Model."""
+
+    def __eq__(self, other: object, /) -> bool:
+        """Compare UserOut objects for equality."""
+        match other:
+            case UserOut():
+                return (
+                    self.handle == other.handle
+                    and self.full_name == other.full_name
+                    and self.preferred_name == other.preferred_name
+                    and self.id == other.id
+                )
+            case _:
+                raise TypeError(f"Cannot compare type {type(self)} to {type(other)}")
 
 
 class UserDb(UserIn, BaseDb):

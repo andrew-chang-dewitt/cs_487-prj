@@ -3,7 +3,7 @@
 from .account import (
     AccountChanges,
     AccountIn,
-    AccountNewDb,
+    AccountNew,
     AccountOut,
     AccountModel,
 )
@@ -17,7 +17,7 @@ from .user import (
 __all__ = [
     "AccountChanges",
     "AccountIn",
-    "AccountNewDb",
+    "AccountNew",
     "AccountOut",
     "AccountModel",
     "UserChanges",
