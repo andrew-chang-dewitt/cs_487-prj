@@ -1,9 +1,8 @@
-"""Tests for util functions."""
+"""Tests for util functions on Optional[T]."""
 
-from typing import reveal_type
 from unittest import TestCase
 
-from src.utils import is_some, some_or_default
+from .optional import is_some, some_or_default
 
 
 class TestOptionUtils(TestCase):
@@ -11,7 +10,6 @@ class TestOptionUtils(TestCase):
 
     def test_is_some(self):
         """Function returns correct value w/ correct associated type."""
-
         maybe_strs = [
             ["Some string should be True", "some string", True],
             ["None string should be False", None, False],
@@ -45,7 +43,6 @@ class TestOptionUtils(TestCase):
 
     def test_some_or_default(self):
         """Function returns correct value w/ correct associated type."""
-
         default_str: str = "default str"
         maybe_strs = [
             ["Some string should give self", "some string", "some string"],

@@ -1,9 +1,9 @@
 """Errors that can be raised at the Application layer."""
 
-from src.utils import some_or_default
-
 from inspect import stack
 from typing import Optional
+
+from .optional import some_or_default
 
 
 class TodoError(NotImplementedError):
