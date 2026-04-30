@@ -1,9 +1,9 @@
 """Account* data objects."""
 
-from typing import Any, Optional
+from functools import lru_cache
+from typing import Any, Annotated
 from uuid import UUID
 
-from db_wrapper.client import AsyncClient
 from db_wrapper.model import (
     sql,
     AsyncCreate,
@@ -12,39 +12,12 @@ from db_wrapper.model import (
     AsyncModel,
 )
 from db_wrapper.model.base import NoResultFound
+from fastapi import Depends
 
-from .base import Base, BaseDb
-from .filters import build_query_equality_filters
+from src.database import DbClient, get_db_client
+from src.shared.models.filters import build_query_equality_filters
 
-
-class AccountBase(Base):
-    """Common fields for user Accounts."""
-
-    name: str
-    closed: bool
-
-
-class AccountIn(AccountBase):
-    """Fields needed from user to create an Account."""
-
-    closed: bool = False
-
-
-class AccountChanges(AccountBase):
-    """Fields used when updating an Account, all are optional."""
-
-    closed: Optional[bool] = None
-    name: Optional[str] = None
-
-
-class AccountNew(AccountBase):
-    """Information needed to save a new account to the database."""
-
-    user_id: UUID
-
-
-class AccountOut(AccountNew, BaseDb):
-    """Fields returned by Account queries."""
+from .types import AccountChanges, AccountOut, AccountNew
 
 
 class AccountCreator(AsyncCreate[AccountOut]):
@@ -147,9 +120,15 @@ class AccountModel(AsyncModel[AccountOut]):
     read: AccountReader
     update: AccountUpdater
 
-    def __init__(self, client: AsyncClient) -> None:
+    def __init__(self, client: DbClient) -> None:
         """Create Account Model."""
         super().__init__(client, "account", AccountOut)
         self.create = AccountCreator(client, self.table, AccountOut)
         self.read = AccountReader(client, self.table, AccountOut)
         self.update = AccountUpdater(client, self.table, AccountOut)
+
+
+@lru_cache
+def get_account_model(db: Annotated[DbClient, Depends(get_db_client)]) -> AccountModel:
+    """Provide UserModel instance for dep injection."""
+    return AccountModel(db)

@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 from db_wrapper.model import sql
 
-from src.models.base import Base
+from .base import Base
 
 
 def _build_one_filter(

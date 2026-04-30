@@ -1,4 +1,4 @@
-"""Utility functions."""
+"""Functions for working w/ Optional or Union[_, None] types."""
 
 from typing import Optional, Union, TypeGuard
 

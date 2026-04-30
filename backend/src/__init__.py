@@ -1,7 +1,5 @@
-"""Expose the package-level application instance for import by the server."""
+"""Expose the package-level application interface."""
 
-from src.config import Config
-from src.app import create_app
+from src.app import app
 
-# create app using default config
-app = create_app(Config())
+__all__ = ["app"]
