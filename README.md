@@ -74,7 +74,13 @@ You will see the response immediately.
 
 ## Database Initialization
 
-  The PostrgresSQL database is automatically initialized using `database/init.sql` when the container starts for the first time.
+  The PostrgresSQL database is automatically initialized using sql files in `database/` when the container starts for the first time.
+
+  Access the postrges terminal with:
+
+  ```bash
+  docker exec -it finance_db psql -U postgres -d finance
+  ```
 
   If you make changes to the schema, please reset the database:
 

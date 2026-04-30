@@ -3,7 +3,7 @@
 venv/
 
 # ignore python cache
-__pycahe__/
+__pycache__/
 *.pyc
 
 # ignore git
