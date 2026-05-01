@@ -218,8 +218,9 @@ class TestRouteGetRoot(TestCase):
             self.assertEqual(200, response.status_code)
 
         with self.subTest(msg="Only returns Transactions >= to given amount."):
-            for item in response.json():
-                self.assertGreaterEqual(item["amount"], 1)
+            results = [TransactionOut(**t) for t in response.json()]
+            for item in results:
+                self.assertGreaterEqual(item.amount, 1)
 
     async def test_filter_maximum_amount(self) -> None:
         """Requests can filter by maximum amount."""
@@ -244,8 +245,9 @@ class TestRouteGetRoot(TestCase):
             self.assertEqual(200, response.status_code)
 
         with self.subTest(msg="Only returns Transactions <= to given amount."):
-            for item in response.json():
-                self.assertLessEqual(item["amount"], 1)
+            results = [TransactionOut(**t) for t in response.json()]
+            for item in results:
+                self.assertLessEqual(item.amount, 1)
 
     async def test_filter_minimum_and_maximum_amount(self) -> None:
         """Requests can filter by both minimum and maximum amount."""
@@ -272,11 +274,12 @@ class TestRouteGetRoot(TestCase):
 
         with self.subTest(msg="Only returns Transactions inclusive between amounts."):
             body = response.json()
-            for item in body:
+            results = [TransactionOut(**t) for t in body]
+            for tran in results:
                 with self.subTest(msg="Greater than/equal to minimum."):
-                    self.assertGreaterEqual(item["amount"], 0)
+                    self.assertGreaterEqual(tran.amount, 0)
                 with self.subTest(msg="Less than/equal to maximum."):
-                    self.assertLessEqual(item["amount"], 1)
+                    self.assertLessEqual(tran.amount, 1)
 
     async def test_filter_minimum_timestamp(self) -> None:
         """Requests can filter by minimum timestamp."""
@@ -440,7 +443,9 @@ class TestRoutePutId(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
+        async with setup(
+            db_value=expected, authd_user=user_id, authd_accts=[account_id]
+        ) as (client, _, _):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
@@ -502,7 +507,9 @@ class TestRouteDeleteId(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
+        async with setup(
+            db_value=expected, authd_user=user_id, authd_accts=[account_id]
+        ) as (client, _, _):
             response = await client.delete(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
@@ -559,7 +566,9 @@ class TestRoutePutSpentFrom(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
+        async with setup(
+            db_value=expected, authd_user=user_id, authd_accts=[account_id]
+        ) as (client, _, _):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}/spent_from/{envelope_id}",
                 headers=headers,
