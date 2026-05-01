@@ -1,5 +1,7 @@
 """Account* data objects."""
 
+from src.shared.models.base import Base
+
 from functools import lru_cache
 from typing import Any, Annotated
 from uuid import UUID
@@ -43,7 +45,7 @@ class AccountCreator(AsyncCreate[AccountOut]):
 class AccountReader(AsyncRead[AccountOut]):
     """Extended read methods."""
 
-    async def many_by_user(self, user_id: UUID, **kwargs: Any) -> list[AccountOut]:
+    async def many_by_user(self, user_id: UUID, **kwargs: Base) -> list[AccountOut]:
         """Get list of accounts for user."""
         filter_values = AccountChanges(
             **{  # type: ignore

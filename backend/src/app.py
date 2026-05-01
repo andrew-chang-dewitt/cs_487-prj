@@ -15,6 +15,7 @@ from .account.router import account
 from .status.router import status
 from .token.router import token
 from .user.router import user
+from .transaction.router import transaction
 
 
 @asynccontextmanager
@@ -80,3 +81,4 @@ app.include_router(status, prefix="/status")
 app.include_router(user, prefix="/user")
 app.include_router(account, prefix="/account")
 app.include_router(token, prefix="/token")
+app.include_router(transaction, prefix="/transaction")

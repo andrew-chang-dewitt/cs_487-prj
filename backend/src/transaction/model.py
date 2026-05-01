@@ -1,0 +1,159 @@
+"""Transaction* data objects."""
+
+from fastapi import Depends
+
+from functools import lru_cache
+from typing import Any, Annotated
+from uuid import UUID
+
+from db_wrapper.model import (
+    sql,
+    AsyncModel,
+    AsyncCreate,
+    AsyncRead,
+    AsyncUpdate,
+)
+
+from src.database import get_db_client, NoResultFound, DbClient
+from src.shared.models.filters import (
+    build_query_filters,
+    build_pagination_filters,
+    FilterQuery,
+)
+
+from .types import (
+    TransactionChanges,
+    TransactionIn,
+    TransactionOut,
+)
+
+
+class TransactionCreator(AsyncCreate[TransactionOut]):
+    """Extend default create methods."""
+
+    async def new(self, new_tran: TransactionIn) -> TransactionOut:
+        """Create & return new Transaction."""
+        columns: list[sql.Identifier] = []
+        values: list[sql.Literal] = []
+
+        for column, value in new_tran.model_dump().items():
+            values.append(sql.Literal(value))
+
+            columns.append(sql.Identifier(column))
+
+        query = sql.SQL(
+            "INSERT INTO {table} ({columns}) VALUES ({values}) RETURNING *;"
+        ).format(
+            table=self._table,
+            columns=sql.SQL(",").join(columns),
+            values=sql.SQL(",").join(values),
+        )
+
+        query_result = await self._client.execute_and_return(query)
+
+        return TransactionOut(**query_result[0])
+
+
+class TransactionReader(AsyncRead[TransactionOut]):
+    """Extended read methods."""
+
+    async def many_by_user(
+        self,
+        user_id: UUID,
+        *,
+        limit: int,
+        page: int,
+        sort: str,
+        **kwargs: FilterQuery,
+    ) -> list[TransactionOut]:
+        """Get list of Transactions for User."""
+        query = sql.SQL("""
+            SELECT
+                t.id as id,
+                t.amount as amount,
+                t.payee as payee,
+                t.description as description,
+                t.timestamp as timestamp,
+                t.account_id as account_id
+            FROM
+                {table} as t
+            INNER JOIN
+                account as a
+            ON
+                a.id = t.account_id
+            WHERE
+                a.user_id = {user_id}
+            {filters}
+            {paginate};
+        """).format(
+            table=self._table,
+            user_id=sql.Literal(user_id),
+            filters=build_query_filters(kwargs),
+            paginate=build_pagination_filters(limit, page, sort),
+        )
+
+        query_result = await self._client.execute_and_return(query)
+
+        return [TransactionOut(**tran) for tran in query_result]
+
+
+class TransactionUpdater(AsyncUpdate[TransactionOut]):
+    """Extended update methods."""
+
+    async def changes(
+        self, existing_id: UUID, changes: TransactionChanges
+    ) -> TransactionOut:
+        """Update existing Transaction with given changes."""
+
+        def compose_one_change(change: tuple[str, Any]) -> sql.Composed:
+            key = change[0]
+            value = change[1]
+
+            return sql.SQL("{key} = {value}").format(
+                key=sql.Identifier(key), value=sql.Literal(value)
+            )
+
+        def compose_changes(changes: dict[str, Any]) -> sql.Composed:
+            return sql.SQL(",").join(
+                [compose_one_change(change) for change in changes.items() if change[1]]
+            )
+
+        query = sql.SQL("""
+            UPDATE {table}
+            SET {changes}
+            WHERE id = {existing_id}
+            RETURNING *;
+        """).format(
+            table=self._table,
+            changes=compose_changes(changes.model_dump()),
+            existing_id=sql.Literal(existing_id),
+        )
+        query_result = await self._client.execute_and_return(query)
+
+        try:
+            return TransactionOut(**query_result[0])
+        except IndexError as err:
+            raise NoResultFound from err
+
+
+class TransactionModel(AsyncModel[TransactionOut]):
+    """Database queries for Transaction objects."""
+
+    create: TransactionCreator
+    read: TransactionReader
+    update: TransactionUpdater
+
+    def __init__(self, client: DbClient) -> None:
+        """Override default CRUD methods & defer remaining to super."""
+        super().__init__(client, "transaction", TransactionOut)
+        self.create = TransactionCreator(client, self.table, TransactionOut)
+        self.read = TransactionReader(client, self.table, TransactionOut)
+        self.update = TransactionUpdater(client, self.table, TransactionOut)
+
+
+@lru_cache
+def get_transaction_model(
+    db: Annotated[DbClient, Depends(get_db_client)],
+) -> TransactionModel:
+    """Provide TransactionModel instance for dep injection."""
+    return TransactionModel(db)

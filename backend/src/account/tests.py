@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from src.shared.testing_fixtures import setup, get_fake_token_header
 
-from .model import AccountOut
+from .types import AccountOut
 
 
 ACCOUNT_PATH = "/account"

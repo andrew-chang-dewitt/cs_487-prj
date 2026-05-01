@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
 
 from db_wrapper.model import sql
 
@@ -19,7 +19,7 @@ def _build_one_filter(
 
 def build_query_equality_filters(filters: Base) -> sql.Composed:
     """Build 'column equals value' filter arguments for query from Model."""
-    filter_queries: List[sql.Composed] = []
+    filter_queries: list[sql.Composed] = []
 
     for key, value in filters.model_dump().items():
         if value is not None:
@@ -28,9 +28,7 @@ def build_query_equality_filters(filters: Base) -> sql.Composed:
     return sql.SQL(" ").join(filter_queries)
 
 
-Condition = Tuple[sql.Composable, Any]
-FilterQuery = Union[Condition, sql.Composed]
-FilterModel = Dict[str, FilterQuery]
+Condition = tuple[sql.Composable, Any]
 
 
 def equals(value: Any) -> Condition:
@@ -88,12 +86,16 @@ class Logical:
     """Organize data required to build a logical condition in SQL."""
 
     operator: LogicalOperator
-    conditions: Tuple[Condition, ...]
+    conditions: tuple[Condition, ...]
 
     def __init__(self, operator: LogicalOperator, *args: Condition) -> None:
         """Create Logical from variable number of arguments as conditions."""
         self.operator = operator
         self.conditions = args
+
+
+FilterQuery = Condition | Logical | sql.Composed
+FilterModel = dict[str, FilterQuery]
 
 
 def logical_or(*args: Condition) -> Logical:
@@ -118,7 +120,7 @@ def _build_logical(
 
 def build_query_filters(filters: FilterModel) -> sql.SQL:
     """Build complex filters from modified Model."""
-    filter_queries: List[sql.Composable] = []
+    filter_queries: list[sql.Composable] = []
 
     for key, value in filters.items():
         if isinstance(value, Logical):
