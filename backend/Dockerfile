@@ -12,6 +12,8 @@ RUN pip install uv
 
 # copying over backend files into container (.dockerignore will ignore .venv and more)
 COPY . . 
+# generate unique app signing key
+RUN echo -n "finance jwt" | sha256sum | awk '{ print $1 }' > .secrets/app_key.txt
 
 # install dependencies from pyproject.toml
 RUN uv sync
