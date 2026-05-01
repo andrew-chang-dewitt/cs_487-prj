@@ -1,6 +1,0 @@
-db-wrapper
-fastapi-swagger>=0.4.48
-fastapi[standard]>=0.135.3
-httpx>=0.28.1
-pydantic-settings>=2.13.1
-pyjwt>=2.12.1
