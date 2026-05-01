@@ -244,7 +244,7 @@ class TestRouteGetRoot(TestCase):
             for item in response.json():
                 self.assertLessEqual(item["amount"], 1)
 
-    async def test_filter_minumum_and_maximum_amount(self) -> None:
+    async def test_filter_minimum_and_maximum_amount(self) -> None:
         """Requests can filter by both minimum and maximum amount."""
         user_id = uuid4()
         account_id = uuid4()
@@ -337,7 +337,7 @@ class TestRouteGetRoot(TestCase):
                     datetime.fromisoformat(before),
                 )
 
-    async def test_filter_minumum_and_maximum_timestamp(self) -> None:
+    async def test_filter_minimum_and_maximum_timestamp(self) -> None:
         """Requests can filter by both minimum and maximum timestamp."""
         user_id = uuid4()
         account_id = uuid4()
