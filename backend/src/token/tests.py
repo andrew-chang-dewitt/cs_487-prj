@@ -19,7 +19,7 @@ class TestPostToken(TestCase):
         """POST /token with valid credentials returns 200 and a Token body.
 
         The response body should contain an `access_token` string and
-        `token_type` of ``bearer``.
+        `token_type` of `bearer`.
         """
         user_id = uuid4()
         expected_user = UserOut(
