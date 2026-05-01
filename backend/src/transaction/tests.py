@@ -137,7 +137,7 @@ class TestRouteGetRoot(TestCase):
 
         with self.subTest(msg="Returns requested transactions."):
             body = response.json()
-            self.assertIsInstance(body, list)
+            self.assertEqual(3, len(body))
             results = [TransactionOut(**t) for t in body]
             self.assertIn(transactions[0], results)
             self.assertIn(transactions[1], results)
@@ -440,7 +440,7 @@ class TestRoutePutId(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id) as (client, _, _):
+        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
@@ -502,7 +502,7 @@ class TestRouteDeleteId(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id) as (client, _, _):
+        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
             response = await client.delete(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
@@ -559,7 +559,7 @@ class TestRoutePutSpentFrom(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=expected, authd_user=user_id) as (client, _, _):
+        async with setup(db_value=expected, authd_user=user_id, authd_accts=[account_id]) as (client, _, _):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}/spent_from/{envelope_id}",
                 headers=headers,

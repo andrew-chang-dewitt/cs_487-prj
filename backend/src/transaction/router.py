@@ -166,8 +166,11 @@ async def put_id(
     existing = await model.read.one_by_id(transaction_id)
     if (
         existing.account_id not in authd_accounts
-        # even if the account_id # is being changed
-        or changes.account_id not in authd_accounts
+        # even if the account_id is being changed
+        or (
+            changes.account_id is not None
+            and changes.account_id not in authd_accounts
+        )
     ):
         raise CredentialsException()
 
