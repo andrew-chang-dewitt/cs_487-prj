@@ -40,9 +40,6 @@ async def post_user(
             409,
             detail=exc.msg,
         ) from exc
-    except Exception as exc:
-        # print(f"[user.router.post_user] user model {model} raised {exc}")
-        raise exc
 
 
 @user.get("", response_model=UserOut, summary="Get the currently authenticated User.")

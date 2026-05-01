@@ -15,7 +15,7 @@ def _get_app_key_from_file() -> str:
     for path in secrets_files:
         try:
             with open(path, "r") as key_file:
-                app_key = str(key_file.readline())
+                app_key = key_file.readline().strip()
                 # exit iteration when first key is found
                 break
         except FileNotFoundError:
@@ -23,7 +23,7 @@ def _get_app_key_from_file() -> str:
 
     if app_key is None:
         raise ValueError(
-            "No value for backend Application Key found in enviornment or secrets."
+            "No value for backend Application Key found in environment or secrets."
         )
 
     return app_key
@@ -40,7 +40,7 @@ class Config(BaseSettings):
     db_user: str = Field("postgres")
     db_password: str = Field("postgres")
     # load jwt key from env or from secrets file
-    jwt_key: str = Field(_get_app_key_from_file())
+    jwt_key: str = Field(default_factory=_get_app_key_from_file)
 
 
 @lru_cache

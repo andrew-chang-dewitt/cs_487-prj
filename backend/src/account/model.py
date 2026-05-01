@@ -90,7 +90,11 @@ class AccountUpdater(AsyncUpdate[AccountOut]):
 
         def compose_changes(changes: dict[str, Any]) -> sql.Composed:
             return sql.SQL(",").join(
-                [compose_one_change(change) for change in changes.items() if change[1]]
+                [
+                    compose_one_change(change)
+                    for change in changes.items()
+                    if change[1] is not None
+                ]
             )
 
         query = sql.SQL("""

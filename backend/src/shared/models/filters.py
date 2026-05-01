@@ -111,7 +111,9 @@ def _build_logical(
     *args: sql.Composable,
 ) -> sql.Composable:
     """Compose a Logical into SQL."""
-    return log_operator.value.join(list(args))
+    composed = log_operator.value.join(list(args))
+
+    return sql.SQL("({conditions})").format(conditions=composed)
 
 
 def build_query_filters(filters: FilterModel) -> sql.SQL:

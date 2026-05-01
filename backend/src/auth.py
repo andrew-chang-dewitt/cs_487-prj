@@ -27,6 +27,8 @@ class CredentialsException(HTTPException):
     def __init__(self) -> None:
         super().__init__(
             status_code=status_code.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -49,7 +51,11 @@ async def get_auth(
     user_model: Annotated[UserModel, Depends(get_user_model)],
 ) -> UUID:
     """Get current user ID from token."""
-    payload = jwt.decode(token, cfg.jwt_key, algorithms=[ALGORITHM])
+    try:
+        payload = jwt.decode(token, cfg.jwt_key, algorithms=[ALGORITHM])
+    except jwt.PyJWTError as exc:
+        raise CredentialsException() from exc
+
     id_str = payload.get("sub")
 
     if id_str is None:

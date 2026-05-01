@@ -9,7 +9,7 @@ status = APIRouter(tags=["API Status"])
 
 
 @status.get(
-    "/",
+    "",
     status_code=status_code.HTTP_200_OK,
     response_model=Status,
     summary="Check API status.",

@@ -1,12 +1,9 @@
 """Database connection helpers."""
 
-from functools import lru_cache
-from typing import Annotated
-
 from db_wrapper import AsyncClient as DbClient, ConnectionParameters
-from fastapi import Depends, Request
+from fastapi import Request
 
-from src.config import Config, get_config
+from src.config import Config
 
 from .errors import DuplicateError, NoResultFound
 from .types import DbClientProtocol
@@ -32,7 +29,6 @@ def build_client(cfg: Config) -> DbClient:
     )
 
 
-@lru_cache
 async def get_db_client(req: Request) -> DbClient:
     """Provide database client for dep injection.
 

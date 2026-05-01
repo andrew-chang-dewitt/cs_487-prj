@@ -176,7 +176,7 @@ class TestPutAccountClosed(TestCase):
         )
         headers = get_fake_token_header(expected.id)
 
-        async with setup(db_value=expected) as (client, _, _):
+        async with setup(db_value=expected, authd_user=user_id) as (client, _, _):
             response = await client.put(
                 f"/account/{account_id}/closed",
                 headers=headers,

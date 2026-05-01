@@ -48,17 +48,32 @@ patch_fastapi(app)
 
 
 @app.exception_handler(NoResultFound)
-async def no_result_sends_404(_: Request, exc: NoResultFound) -> JSONResponse:
+async def no_result_sends_404(req: Request, exc: NoResultFound) -> JSONResponse:
     """Return 404 when db fails to find requested item & it propagates up to here."""
     raise HTTPException(
         status_code=404, detail="The requested resource does not exist."
     )
+    return JSONResponse(
+        status_code=404,
+        content={"detail": "The requested resource does not exist."},
+    )
 
 
 @app.exception_handler(TodoError)
-async def todo_sends_501(_: Request, exc: TodoError) -> JSONResponse:
+async def todo_sends_501(req: Request, exc: TodoError) -> JSONResponse:
     """Return more specific code for endpoints that have incomplete implementation."""
-    raise HTTPException(status_code=501, detail=str(exc))
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": str(exc),
+            "request": {
+                "url": str(req.url),
+                "method": req.method,
+                "headers": str(req.headers),
+                "query_parameters": str(req.query_params),
+            },
+        },
+    )
 
 
 app.include_router(status, prefix="/status")

@@ -1,6 +1,6 @@
 """Fixtures to aid in unit testing."""
 
-from base64 import encodebytes
+from copy import deepcopy
 
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator, Callable, Annotated
@@ -113,6 +113,8 @@ async def setup(
     authd_user: UUID | CredentialsException | None = None,
 ) -> AsyncGenerator[tuple[TestClient, DbClientProtocol, Callable[[Any, bool], None]]]:
     """Create test app & expose methods for controlling mock db."""
+    # save copy of original deps
+    original_deps = deepcopy(app.dependency_overrides)
 
     def get_mock_auth(
         _: Annotated[Config, Depends(get_config)],
@@ -139,6 +141,9 @@ async def setup(
 
     async with TestClient(transport=ASGITransport(app), base_url=BASE_URL) as client:
         yield client, db, set_result
+
+    # restore original dependencies to ensure tests stay isolated
+    app.dependency_overrides = original_deps
 
 
 def get_fake_token_header(user_id: UUID) -> dict[str, str]:
