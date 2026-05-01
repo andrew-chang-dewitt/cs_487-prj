@@ -1,5 +1,7 @@
 """Routes under `/transaction`."""
 
+from src.database import NoResultFound
+
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Callable
@@ -8,7 +10,7 @@ from uuid import UUID
 from fastapi import status as status_code, Depends, Query
 from fastapi.routing import APIRouter
 
-from src.auth import get_auth
+from src.auth import get_auth, CredentialsException, get_authd_accounts
 from src.shared.models.filters import (
     Condition,
     Logical,
@@ -64,10 +66,14 @@ transaction = APIRouter(tags=["Transaction"])
 )
 async def post_root(
     new_tran: TransactionIn,
-    user_id: Annotated[UUID, Depends(get_auth)],
+    authd_accounts: Annotated[list[UUID], Depends(get_authd_accounts)],
     model: Annotated[TransactionModel, Depends(get_transaction_model)],
 ) -> TransactionOut:
     """Save given Transaction to database."""
+    # ensure user is authorized for associated account
+    if new_tran.account_id not in authd_accounts:
+        raise CredentialsException()
+
     return await model.create.new(new_tran)
 
 
@@ -79,6 +85,7 @@ async def post_root(
 async def get_root(
     model: Annotated[TransactionModel, Depends(get_transaction_model)],
     user_id: Annotated[UUID, Depends(get_auth)],
+    authd_accounts: Annotated[list[UUID], Depends(get_authd_accounts)],
     account_id: Annotated[
         UUID | None,
         Query(description="Only return Transactions belonging to this Account."),
@@ -151,10 +158,19 @@ async def get_root(
 async def put_id(
     transaction_id: UUID,
     changes: TransactionChanges,
-    user_id: Annotated[UUID, Depends(get_auth)],
+    authd_accounts: Annotated[list[UUID], Depends(get_authd_accounts)],
     model: Annotated[TransactionModel, Depends(get_transaction_model)],
 ) -> TransactionOut:
     """Edit the given Transaction."""
+    # ensure user is authorized for associated accounts
+    existing = await model.read.one_by_id(transaction_id)
+    if (
+        existing.account_id not in authd_accounts
+        # even if the account_id # is being changed
+        or changes.account_id not in authd_accounts
+    ):
+        raise CredentialsException()
+
     return await model.update.changes(transaction_id, changes)
 
 
@@ -165,10 +181,15 @@ async def put_id(
 )
 async def delete_id(
     transaction_id: UUID,
-    user_id: Annotated[UUID, Depends(get_auth)],
+    authd_accounts: Annotated[list[UUID], Depends(get_authd_accounts)],
     model: Annotated[TransactionModel, Depends(get_transaction_model)],
 ) -> TransactionOut:
     """Delete the given Transaction."""
+    # ensure user is authorized for associated account
+    existing = await model.read.one_by_id(transaction_id)
+    if existing.account_id not in authd_accounts:
+        raise CredentialsException()
+
     return await model.delete.one_by_id(str(transaction_id))
 
 
@@ -180,10 +201,15 @@ async def delete_id(
 async def put_spent_from(
     transaction_id: UUID,
     spent_from_id: UUID,
-    user_id: Annotated[UUID, Depends(get_auth)],
+    authd_accounts: Annotated[list[UUID], Depends(get_authd_accounts)],
     model: Annotated[TransactionModel, Depends(get_transaction_model)],
 ) -> TransactionOut:
     """Mark Transaction as Spent From given Envelope."""
+    # ensure user is authorized for associated account
+    existing = await model.read.one_by_id(transaction_id)
+    if existing.account_id not in authd_accounts:
+        raise CredentialsException()
+
     return await model.update.changes(
         transaction_id, TransactionChanges(spent_from=spent_from_id)
     )

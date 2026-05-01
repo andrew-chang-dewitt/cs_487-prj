@@ -1,5 +1,7 @@
 """Security constants & methods."""
 
+from src.account.model import get_account_model, AccountModel
+
 from src.config import Config, get_config
 
 from datetime import datetime, timedelta, timezone
@@ -69,3 +71,11 @@ async def get_auth(
         raise CredentialsException()
 
     return user_id
+
+
+async def get_authd_accounts(
+    user_id: Annotated[UUID, Depends(get_auth)],
+    account_model: Annotated[AccountModel, Depends(get_account_model)],
+) -> list[UUID]:
+    """Get list of Account Ids that currently authenticated User is authorized for."""
+    return [a.id for a in await account_model.read.many_by_user(user_id)]

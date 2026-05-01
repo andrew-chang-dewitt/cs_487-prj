@@ -17,7 +17,6 @@ type Amount = Annotated[Decimal, Field(max_places=2)]
 class TransactionBase(Base):
     """Base Transaction fields."""
 
-    # FIXME, make this reproducible?
     amount: Amount
     description: str
     payee: str

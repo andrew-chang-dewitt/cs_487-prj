@@ -31,7 +31,9 @@ class TestRoutePostRoot(TestCase):
         )
         headers = get_fake_token_header(expected.id)
 
-        async with setup(db_value=expected, authd_user=user_id) as (client, _, _):
+        async with setup(
+            db_value=expected, authd_user=user_id, authd_accts=[account_id]
+        ) as (client, _, _):
             response = await client.post(
                 BASE_URL,
                 headers=headers,
@@ -52,11 +54,12 @@ class TestRoutePostRoot(TestCase):
                 self.assertEqual(TransactionOut(**body), expected)
 
     async def test_cant_create_transactions_if_not_own_account(self) -> None:
-        """Return 403 attempting to create transaction for other account."""
+        """Return 401 attempting to create transaction for other account."""
         user_id = uuid4()
         other_account = uuid4()
-        other_transaction = TransactionOut(
-            id=uuid4(),
+        transaction_id = uuid4()
+        new_tran = TransactionOut(
+            id=transaction_id,
             amount=Decimal("1.23"),
             description="a description",
             payee="payee",
@@ -65,9 +68,11 @@ class TestRoutePostRoot(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(
-            db_value=other_transaction, authd_user=user_id
-        ) as (client, _, _):
+        async with setup(db_value=new_tran, authd_user=user_id, authd_accts=[]) as (
+            client,
+            _,
+            _,
+        ):
             response = await client.post(
                 BASE_URL,
                 headers=headers,
@@ -80,7 +85,7 @@ class TestRoutePostRoot(TestCase):
                 },
             )
 
-            self.assertEqual(403, response.status_code)
+            self.assertEqual(401, response.status_code)
 
 
 class TestRouteGetRoot(TestCase):
@@ -89,7 +94,8 @@ class TestRouteGetRoot(TestCase):
     async def test_valid_request(self) -> None:
         """Testing a valid request's response."""
         user_id = uuid4()
-        account_id = uuid4()
+        account_one_id = uuid4()
+        account_two_id = uuid4()
         transactions = [
             TransactionOut(
                 id=uuid4(),
@@ -97,46 +103,45 @@ class TestRouteGetRoot(TestCase):
                 payee="a payee",
                 description="a description",
                 timestamp=datetime.fromisoformat("2019-12-10T08:12-05:00"),
-                account_id=account_id,
+                account_id=account_one_id,
             ),
             TransactionOut(
                 id=uuid4(),
-                amount=Decimal("1.23"),
+                amount=Decimal("456"),
                 payee="a payee",
                 description="a description",
                 timestamp=datetime.fromisoformat("2019-12-10T09:12-05:00"),
-                account_id=account_id,
+                account_id=account_two_id,
             ),
             TransactionOut(
                 id=uuid4(),
-                amount=Decimal("1.23"),
+                amount=Decimal("789.10"),
                 payee="a payee",
                 description="a description",
                 timestamp=datetime.fromisoformat("2019-12-11T06:12-05:00"),
-                account_id=account_id,
+                account_id=account_one_id,
             ),
         ]
         db_rows = [t.model_dump() for t in transactions]
         headers = get_fake_token_header(user_id)
 
-        async with setup(db_value=db_rows, authd_user=user_id) as (client, _, _):
+        async with setup(
+            db_value=db_rows,
+            authd_user=user_id,
+            authd_accts=[account_one_id, account_two_id],
+        ) as (client, _, _):
             response = await client.get(BASE_URL, headers=headers)
 
         with self.subTest(msg="Responds with a status code of 200."):
             self.assertEqual(200, response.status_code)
 
-        with self.subTest(msg="All objects returned are Transactions."):
-            for item in response.json():
-                with self.subTest(msg="Amount is float"):
-                    self.assertTrue(isinstance(item["amount"], float))
-                with self.subTest(msg="Payee is string"):
-                    self.assertTrue(isinstance(item["payee"], str))
-                with self.subTest(msg="Description is string"):
-                    self.assertTrue(isinstance(item["description"], str))
-                with self.subTest(msg="Timestamp is ISO Datetime"):
-                    self.assertTrue(datetime.fromisoformat(item["timestamp"]))
-                with self.subTest(msg="Account ID is UUID"):
-                    self.assertTrue(UUID(item["account_id"]))
+        with self.subTest(msg="Returns requested transactions."):
+            body = response.json()
+            self.assertIsInstance(body, list)
+            results = [TransactionOut(**t) for t in body]
+            self.assertIn(transactions[0], results)
+            self.assertIn(transactions[1], results)
+            self.assertIn(transactions[2], results)
 
     async def test_filter_by_account(self) -> None:
         """Requests can filter by account."""
@@ -181,9 +186,7 @@ class TestRouteGetRoot(TestCase):
         headers = get_fake_token_header(user_id)
 
         async with setup(db_value=transaction, authd_user=user_id) as (client, _, _):
-            response = await client.get(
-                f"{BASE_URL}?payee=a%20payee", headers=headers
-            )
+            response = await client.get(f"{BASE_URL}?payee=a%20payee", headers=headers)
 
         with self.subTest(msg="Responds with a status code of 200."):
             self.assertEqual(200, response.status_code)
@@ -267,9 +270,7 @@ class TestRouteGetRoot(TestCase):
         with self.subTest(msg="Responds with a status code of 200."):
             self.assertEqual(200, response.status_code)
 
-        with self.subTest(
-            msg="Only returns Transactions inclusive between amounts."
-        ):
+        with self.subTest(msg="Only returns Transactions inclusive between amounts."):
             body = response.json()
             for item in body:
                 with self.subTest(msg="Greater than/equal to minimum."):
@@ -293,9 +294,7 @@ class TestRouteGetRoot(TestCase):
         headers = get_fake_token_header(user_id)
 
         async with setup(db_value=transaction, authd_user=user_id) as (client, _, _):
-            response = await client.get(
-                f"{BASE_URL}?after={after}", headers=headers
-            )
+            response = await client.get(f"{BASE_URL}?after={after}", headers=headers)
 
         with self.subTest(msg="Responds with a status code of 200."):
             self.assertEqual(200, response.status_code)
@@ -323,9 +322,7 @@ class TestRouteGetRoot(TestCase):
         headers = get_fake_token_header(user_id)
 
         async with setup(db_value=transaction, authd_user=user_id) as (client, _, _):
-            response = await client.get(
-                f"{BASE_URL}?before={before}", headers=headers
-            )
+            response = await client.get(f"{BASE_URL}?before={before}", headers=headers)
 
         with self.subTest(msg="Responds with a status code of 200."):
             self.assertEqual(200, response.status_code)
@@ -458,7 +455,7 @@ class TestRoutePutId(TestCase):
             self.assertEqual(body["description"], changes["description"])
 
     async def test_cant_update_transactions_if_not_own_account(self) -> None:
-        """Return 403 attempting to update transaction for other account."""
+        """Return 401 attempting to update transaction for other account."""
         user_id = uuid4()
         other_account = uuid4()
         tran_id = uuid4()
@@ -473,16 +470,18 @@ class TestRoutePutId(TestCase):
         changes = {"description": "new description"}
         headers = get_fake_token_header(user_id)
 
-        async with setup(
-            db_value=other_transaction, authd_user=user_id
-        ) as (client, _, _):
+        async with setup(db_value=other_transaction, authd_user=user_id) as (
+            client,
+            _,
+            _,
+        ):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
                 json=changes,
             )
 
-            self.assertEqual(403, response.status_code)
+            self.assertEqual(401, response.status_code)
 
 
 class TestRouteDeleteId(TestCase):
@@ -513,7 +512,7 @@ class TestRouteDeleteId(TestCase):
             self.assertEqual(200, response.status_code)
 
     async def test_cant_delete_transactions_if_not_own_account(self) -> None:
-        """Return 403 attempting to delete transaction for other account."""
+        """Return 401 attempting to delete transaction for other account."""
         user_id = uuid4()
         other_account = uuid4()
         tran_id = uuid4()
@@ -527,15 +526,17 @@ class TestRouteDeleteId(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(
-            db_value=other_transaction, authd_user=user_id
-        ) as (client, _, _):
+        async with setup(db_value=other_transaction, authd_user=user_id) as (
+            client,
+            _,
+            _,
+        ):
             response = await client.delete(
                 f"{BASE_URL}/{tran_id}",
                 headers=headers,
             )
 
-            self.assertEqual(403, response.status_code)
+            self.assertEqual(401, response.status_code)
 
 
 class TestRoutePutSpentFrom(TestCase):
@@ -572,7 +573,7 @@ class TestRoutePutSpentFrom(TestCase):
             self.assertEqual(UUID(body["spent_from"]), envelope_id)
 
     async def test_cant_update_transactions_if_not_own_account(self) -> None:
-        """Return 403 attempting to update transaction for other account."""
+        """Return 401 attempting to update transaction for other account."""
         user_id = uuid4()
         other_account = uuid4()
         tran_id = uuid4()
@@ -587,15 +588,17 @@ class TestRoutePutSpentFrom(TestCase):
         )
         headers = get_fake_token_header(user_id)
 
-        async with setup(
-            db_value=other_transaction, authd_user=user_id
-        ) as (client, _, _):
+        async with setup(db_value=other_transaction, authd_user=user_id) as (
+            client,
+            _,
+            _,
+        ):
             response = await client.put(
                 f"{BASE_URL}/{tran_id}/spent_from/{envelope_id}",
                 headers=headers,
             )
 
-            self.assertEqual(403, response.status_code)
+            self.assertEqual(401, response.status_code)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 """Fixtures to aid in unit testing."""
 
+from src.account.model import get_account_model, AccountModel
+
 from copy import deepcopy
 
 from contextlib import asynccontextmanager
@@ -14,6 +16,7 @@ from src.auth import (
     CredentialsException,
     get_auth,
     oauth2_scheme,
+    get_authd_accounts,
 )
 from src.config import Config, get_config
 from src.database import get_db_client, DbClientProtocol
@@ -111,11 +114,13 @@ async def setup(
     db_value: Any | None = None,
     db_raises: bool = False,
     authd_user: UUID | CredentialsException | None = None,
+    authd_accts: list[UUID] = [],
 ) -> AsyncGenerator[tuple[TestClient, DbClientProtocol, Callable[[Any, bool], None]]]:
     """Create test app & expose methods for controlling mock db."""
     # save copy of original deps
     original_deps = deepcopy(app.dependency_overrides)
 
+    # configure mock for get_auth
     def get_mock_auth(
         _: Annotated[Config, Depends(get_config)],
         __: Annotated[str, Depends(oauth2_scheme)],
@@ -131,6 +136,15 @@ async def setup(
 
     if authd_user is not None:
         app.dependency_overrides[get_auth] = get_mock_auth
+
+    # configure mock for get_authd_accounts
+    def get_mock_authd_accounts(
+        user_id: Annotated[UUID, Depends(get_auth)],
+        _: Annotated[AccountModel, Depends(get_account_model)],
+    ) -> list[UUID]:
+        return authd_accts
+
+    app.dependency_overrides[get_authd_accounts] = get_mock_authd_accounts
 
     db, set_result = build_mock_db(db_value=db_value, db_raises=db_raises)
 

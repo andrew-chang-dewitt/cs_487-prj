@@ -41,9 +41,12 @@ class TransactionCreator(AsyncCreate[TransactionOut]):
 
             columns.append(sql.Identifier(column))
 
-        query = sql.SQL(
-            "INSERT INTO {table} ({columns}) VALUES ({values}) RETURNING *;"
-        ).format(
+        query = sql.SQL("""
+            INSERT INTO {table}
+                ({columns})
+            SELECT {values}
+            RETURNING *;
+        """).format(
             table=self._table,
             columns=sql.SQL(",").join(columns),
             values=sql.SQL(",").join(values),
@@ -51,7 +54,10 @@ class TransactionCreator(AsyncCreate[TransactionOut]):
 
         query_result = await self._client.execute_and_return(query)
 
-        return TransactionOut(**query_result[0])
+        try:
+            return TransactionOut(**query_result[0])
+        except IndexError:
+            raise NoResultFound()
 
 
 class TransactionReader(AsyncRead[TransactionOut]):
